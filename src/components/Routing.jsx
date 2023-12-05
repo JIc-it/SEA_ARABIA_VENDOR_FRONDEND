@@ -5,6 +5,7 @@ import AddVendorInfo from "./Initial_contact/AddVendorForm";
 import Availability from "./Vendor/Availability";
 import Review from "./Vendor/Review";
 import Calendar from "./Vendor/Calendar";
+import BookingView from "./Vendor/BookingView";
 function AllRouting() {
   return (
     <BrowserRouter basename="/">
@@ -15,6 +16,7 @@ function AllRouting() {
         <Route path="/availability" element={<Availability />} />
         <Route path="/review" element={<Review />} />
         <Route path="/calendar" element={<Calendar />} />
+        <Route path="/booking-view" element={<BookingView />} />
       </Routes>
     </BrowserRouter>
   );

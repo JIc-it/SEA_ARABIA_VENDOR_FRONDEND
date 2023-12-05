@@ -19,10 +19,10 @@
 }
 
 .status_dropdown select {
-  width: 160px;
+  width: 300px;
   padding: 6px;
-  color: white;
-  background-color: #5a9cd9;
+  color: #000;
+  background-color: #FFF;
   border-radius: 6px;
 }
 

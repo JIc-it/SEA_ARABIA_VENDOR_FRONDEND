@@ -397,6 +397,7 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
+                
                 <span className="nav-link-title">&nbsp; Availability</span>
               </a>
             </li>
