@@ -353,7 +353,7 @@ function SideBar() {
         <div className="collapse navbar-collapse" id="sidebar-menu">
           <ul className="navbar-nav pt-lg-3 " style={{ gap: "30px" }}>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <a className="nav-link" href="/lead-managment">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -373,11 +373,11 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="nav-link-title">&nbsp; Booking</span>
+                <span className="nav-link-title">&nbsp; Booking{" "}</span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <a className="nav-link" href="/availability">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -398,11 +398,11 @@ function SideBar() {
                   />
                 </svg>
                 
-                <span className="nav-link-title">&nbsp; Availability</span>
+                <span className="nav-link-title">&nbsp; Availability {""}</span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <a className="nav-link" href="/calendar">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -422,11 +422,11 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="nav-link-title">&nbsp; Calendar</span>
+                <span className="nav-link-title">&nbsp; Calendar{""}</span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <a className="nav-link" href="/review">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -446,7 +446,7 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="nav-link-title">&nbsp; Ratings</span>
+                <span className="nav-link-title">&nbsp; Ratings{""}</span>
               </a>
             </li>
           </ul>

@@ -202,7 +202,7 @@ const Availability = ({ selectedOptions, onChange }) => {
                   </div>
                   <h2>Select Machine</h2>
                   <Select
-                    isMulti
+                    // isMulti
                     options={options}
                     value={selectedOptions}
                     onChange={onChange}

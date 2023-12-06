@@ -6,19 +6,21 @@ import Availability from "./Vendor/Availability";
 import Review from "./Vendor/Review";
 import Calendar from "./Vendor/Calendar";
 import BookingView from "./Vendor/BookingView";
+import Login from "./LoginPage/Login";
 function AllRouting() {
   return (
-    <BrowserRouter basename="/">
+    // <BrowserRouter basename="/">
       <Routes>
-        <Route path="/" element={<LeadManagement />}></Route>
+        <Route index element={<Login />} />
+        <Route path="lead-managment" element={<LeadManagement />}></Route>
         <Route path="/onboard" element={<OnBoard />} />
         <Route path="/add-vendor-details" element={<AddVendorInfo />} />
         <Route path="/availability" element={<Availability />} />
         <Route path="/review" element={<Review />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/booking-view" element={<BookingView />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
-    </BrowserRouter>
   );
 }
 
