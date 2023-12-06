@@ -18,6 +18,9 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import LoginImageContainer from "./LoginImageContainer";
+import CopyWrite from "./CopyWrite";
+import { loginRequest } from '../../axioshandle/authHandle'
+import { passwordRegex } from "../../helpers";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -41,33 +44,33 @@ const Login = () => {
         .max(50)
         .required("Password is required")
         .matches(
-        //   passwordRegex,
-          "Password must contain at least 8 characters, at least one uppercase letter, lowercase letter, special character, and number"
+          passwordRegex,
+          "Password must contain at least 5 characters, at least one uppercase letter, lowercase letter, special character, and number"
         ),
     }),
-    // onSubmit: async (values, helpers) => {
-    //   try {
-    //     const data = {
-    //       email: values.email,
-    //       password: values.password,
-    //     };
-    //     const { access, refresh, role } = await loginRequest(data);
-    //     if (access) {
-    //       localStorage.setItem("access_token", access);
-    //       localStorage.setItem("refresh_token", refresh);
-    //       localStorage.setItem("role", role);
-    //       navigate(`/dashboard`);
-    //       console.log("sucess");
-    //     } else {
-    //       toast.error("Login error");
-    //     }
-    //   } catch (err) {
-    //     console.log(err);
-    //     helpers.setStatus({ success: false });
-    //     helpers.setErrors({ submit: err.message });
-    //     helpers.setSubmitting(false);
-    //   }
-    // },
+    onSubmit: async (values, helpers) => {
+      try {
+        const data = {
+          email: values.email,
+          password: values.password,
+        };
+        const { access, refresh, role } = await loginRequest(data);
+        if (access) {
+          localStorage.setItem("access_token", access);
+          localStorage.setItem("refresh_token", refresh);
+          localStorage.setItem("role", role);
+          navigate(`/lead-managment`);
+          console.log("sucess");
+        } else {
+          toast.error("Login error");
+        }
+      } catch (err) {
+        console.log(err);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: err.message });
+        helpers.setSubmitting(false);
+      }
+    },
   });
 
 
@@ -146,17 +149,17 @@ const Login = () => {
                     <TextField
                       autocomplete="off"
                       size="small"
-                    //   error={
-                    //     !!(formik.touched.password && formik.errors.password)
-                    //   }
+                      error={
+                        !!(formik.touched.password && formik.errors.password)
+                      }
                       fullWidth
-                    //   helperText={
-                    //     formik.touched.password && formik.errors.password
-                    //   }
+                      helperText={
+                        formik.touched.password && formik.errors.password
+                      }
                       placeholder="Password"
                       name="password"
-                    //   onBlur={formik.handleBlur}
-                    //   onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
                       type={"password"}
                       value={formik.values.password}
                       inputProps={{ maxLength: 50 }}
@@ -176,15 +179,15 @@ const Login = () => {
                     type="submit"
                     variant="contained"
                     style={{
-                      borderRadius: " var(--roundness-round-inside, 6px)",
+                      borderRadius: "var(--roundness-round-inside, 6px)",
                       background: "#006875",
 
                       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
                       textTransform: "none",
                     }}
                   >
-                
-                    <a href="/lead-managment">Sign In</a>
+                    Sign In
+                    {/* <a href="/lead-managment">Sign In</a> */}
                   </Button>
                   <br />
                   {/* {capsLockOn && (
@@ -210,7 +213,7 @@ const Login = () => {
                   >
                     <Link
                       // component={NextLink}
-                      href="/email-verification"
+                      href="/email-varification"
                       underline="hover"
                       variant="subtitle2"
                       style={{ color: "#187AF7" }}
@@ -224,7 +227,7 @@ const Login = () => {
           </Box>
 
           <div className="copy-write-container">
-            {/* <CopyWrite /> */}
+            <CopyWrite />
           </div>
         </div>
       </div>
