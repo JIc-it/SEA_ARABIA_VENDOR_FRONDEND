@@ -1,18 +1,10 @@
 import axios from "axios";
 
 const API_BASE_URL = "https://seaarabia.jicitsolution.com/";
-<<<<<<< HEAD
-
-// const axiosInstance = axios.create({
-//     baseURL: API_BASE_URL,
-//     timeout: 10000,
-// });
-=======
 const REFRESH_URL = "api/token/refresh/";
 const VERIFY_URL = "api/token/verify/";
 const GENERATE_URL = "api/token/";
 const LOGOUT_URL = "api/token/blacklist/";
->>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

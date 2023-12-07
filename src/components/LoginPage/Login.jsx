@@ -18,13 +18,9 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import LoginImageContainer from "./LoginImageContainer";
-<<<<<<< HEAD
-import { loginRequest } from "../../axioshandle/login";
-=======
 import CopyWrite from "./CopyWrite";
 import { loginRequest } from '../../axioshandle/authHandle'
 import { passwordRegex } from "../../helpers";
->>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
 
 const Login = () => {
   const navigate = useNavigate();
@@ -47,17 +43,10 @@ const Login = () => {
       password: Yup.string()
         .max(50)
         .required("Password is required")
-<<<<<<< HEAD
-        // .matches(
-        // //   passwordRegex,
-        //   "Password must contain at least 8 characters, at least one uppercase letter, lowercase letter, special character, and number"
-        // ),
-=======
         .matches(
           passwordRegex,
           "Password must contain at least 5 characters, at least one uppercase letter, lowercase letter, special character, and number"
         ),
->>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -66,19 +55,11 @@ const Login = () => {
           password: values.password,
         };
         const { access, refresh, role } = await loginRequest(data);
-<<<<<<< HEAD
-
-=======
->>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
         if (access) {
           localStorage.setItem("access_token", access);
           localStorage.setItem("refresh_token", refresh);
           localStorage.setItem("role", role);
-<<<<<<< HEAD
-          navigate(`/review`);
-=======
           navigate(`/lead-managment`);
->>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
           console.log("sucess");
         } else {
           toast.error("Login error");
@@ -168,13 +149,13 @@ const Login = () => {
                     <TextField
                       autocomplete="off"
                       size="small"
-                      error={
-                        !!(formik.touched.password && formik.errors.password)
-                      }
+                      // error={
+                      //   !!(formik.touched.password && formik.errors.password)
+                      // }
                       fullWidth
-                      helperText={
-                        formik.touched.password && formik.errors.password
-                      }
+                      // helperText={
+                      //   formik.touched.password && formik.errors.password
+                      // }
                       placeholder="Password"
                       name="password"
                       onBlur={formik.handleBlur}
@@ -205,13 +186,8 @@ const Login = () => {
                       textTransform: "none",
                     }}
                   >
-<<<<<<< HEAD
-                
-                    Sign In
-=======
                     Sign In
                     {/* <a href="/lead-managment">Sign In</a> */}
->>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
                   </Button>
                   <br />
                   {/* {capsLockOn && (
