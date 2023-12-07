@@ -148,13 +148,13 @@ const Login = () => {
                     <TextField
                       autocomplete="off"
                       size="small"
-                      error={
-                        !!(formik.touched.password && formik.errors.password)
-                      }
+                      // error={
+                      //   !!(formik.touched.password && formik.errors.password)
+                      // }
                       fullWidth
-                      helperText={
-                        formik.touched.password && formik.errors.password
-                      }
+                      // helperText={
+                      //   formik.touched.password && formik.errors.password
+                      // }
                       placeholder="Password"
                       name="password"
                       onBlur={formik.handleBlur}
