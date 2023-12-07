@@ -224,7 +224,7 @@ const Availability = ({ selectedOptions, onChange }) => {
                   {/* <div className="App">
                   <Calendar year={year} month={month} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
                 </div> */}
-                  <div style={{ maxWidth: 1500 }}>
+                  <div style={{width:'600px !important'}}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateCalendar />
                     </LocalizationProvider>

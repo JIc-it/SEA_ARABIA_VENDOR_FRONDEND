@@ -1,23 +1,11 @@
-// import SideBar from "./components/Common/SideBar";
-// import Header from "./components/Common/Header";
-// import AllRouting from "./components/Routing";
-// function App() {
-//   return (
-//     <div className="page">
-//       <Header />
-//       <SideBar />
-//       <AllRouting />
-//     </div>
-//   );
-// }
-
-// export default App;
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import MainPage from "./components/MainPage";
 import Login from "./components/LoginPage/Login";
-
+import EmailVerification from "./components/LoginPage/EmailVerification";
+import VerificationCode from "./components/LoginPage/VerificationCode";
+import ResetLoginPassword from "./components/LoginPage/ResetLoginPassword";
 
 function App() {
   return (
@@ -38,6 +26,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
+          <Route path="email-varification" element={<EmailVerification />} />
+          <Route path="verification" element={<VerificationCode />} />
+          <Route path="resetpassword" element={<ResetLoginPassword />} />
           <Route path="/*" element={<MainPage />} />
         </Routes>
       </div>

@@ -149,7 +149,7 @@ function Header() {
               <a href="./settings.html" className="dropdown-item">
                 Settings
               </a>
-              <a href="./sign-in.html" className="dropdown-item">
+              <a href="./login" className="dropdown-item">
                 Logout
               </a>
             </div>

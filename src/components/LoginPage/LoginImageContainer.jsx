@@ -10,7 +10,7 @@ const LoginImageContainer = () => {
           <div className="col-md-6">
             <div className="logo">
               <img src={logo} alt="" />
-              <h4>Sea Arabia CMS</h4>
+              <h4>Sea Arabia Vendar CMS</h4>
               <span>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
                 sollicitudin.

@@ -18,7 +18,13 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import LoginImageContainer from "./LoginImageContainer";
+<<<<<<< HEAD
 import { loginRequest } from "../../axioshandle/login";
+=======
+import CopyWrite from "./CopyWrite";
+import { loginRequest } from '../../axioshandle/authHandle'
+import { passwordRegex } from "../../helpers";
+>>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
 
 const Login = () => {
   const navigate = useNavigate();
@@ -41,10 +47,17 @@ const Login = () => {
       password: Yup.string()
         .max(50)
         .required("Password is required")
+<<<<<<< HEAD
         // .matches(
         // //   passwordRegex,
         //   "Password must contain at least 8 characters, at least one uppercase letter, lowercase letter, special character, and number"
         // ),
+=======
+        .matches(
+          passwordRegex,
+          "Password must contain at least 5 characters, at least one uppercase letter, lowercase letter, special character, and number"
+        ),
+>>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -53,12 +66,19 @@ const Login = () => {
           password: values.password,
         };
         const { access, refresh, role } = await loginRequest(data);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
         if (access) {
           localStorage.setItem("access_token", access);
           localStorage.setItem("refresh_token", refresh);
           localStorage.setItem("role", role);
+<<<<<<< HEAD
           navigate(`/review`);
+=======
+          navigate(`/lead-managment`);
+>>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
           console.log("sucess");
         } else {
           toast.error("Login error");
@@ -178,15 +198,20 @@ const Login = () => {
                     type="submit"
                     variant="contained"
                     style={{
-                      borderRadius: " var(--roundness-round-inside, 6px)",
+                      borderRadius: "var(--roundness-round-inside, 6px)",
                       background: "#006875",
 
                       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
                       textTransform: "none",
                     }}
                   >
+<<<<<<< HEAD
                 
                     Sign In
+=======
+                    Sign In
+                    {/* <a href="/lead-managment">Sign In</a> */}
+>>>>>>> 7fbc3de10402a9177b4cb202b2e9ded04a398e67
                   </Button>
                   <br />
                   {/* {capsLockOn && (
@@ -212,7 +237,7 @@ const Login = () => {
                   >
                     <Link
                       // component={NextLink}
-                      href="/email-verification"
+                      href="/email-varification"
                       underline="hover"
                       variant="subtitle2"
                       style={{ color: "#187AF7" }}
@@ -226,7 +251,7 @@ const Login = () => {
           </Box>
 
           <div className="copy-write-container">
-            {/* <CopyWrite /> */}
+            <CopyWrite />
           </div>
         </div>
       </div>
