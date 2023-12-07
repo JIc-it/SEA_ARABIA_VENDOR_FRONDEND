@@ -18,6 +18,7 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import LoginImageContainer from "./LoginImageContainer";
+import { loginRequest } from "../../axioshandle/login";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,34 +41,35 @@ const Login = () => {
       password: Yup.string()
         .max(50)
         .required("Password is required")
-        .matches(
-        //   passwordRegex,
-          "Password must contain at least 8 characters, at least one uppercase letter, lowercase letter, special character, and number"
-        ),
+        // .matches(
+        // //   passwordRegex,
+        //   "Password must contain at least 8 characters, at least one uppercase letter, lowercase letter, special character, and number"
+        // ),
     }),
-    // onSubmit: async (values, helpers) => {
-    //   try {
-    //     const data = {
-    //       email: values.email,
-    //       password: values.password,
-    //     };
-    //     const { access, refresh, role } = await loginRequest(data);
-    //     if (access) {
-    //       localStorage.setItem("access_token", access);
-    //       localStorage.setItem("refresh_token", refresh);
-    //       localStorage.setItem("role", role);
-    //       navigate(`/dashboard`);
-    //       console.log("sucess");
-    //     } else {
-    //       toast.error("Login error");
-    //     }
-    //   } catch (err) {
-    //     console.log(err);
-    //     helpers.setStatus({ success: false });
-    //     helpers.setErrors({ submit: err.message });
-    //     helpers.setSubmitting(false);
-    //   }
-    // },
+    onSubmit: async (values, helpers) => {
+      try {
+        const data = {
+          email: values.email,
+          password: values.password,
+        };
+        const { access, refresh, role } = await loginRequest(data);
+
+        if (access) {
+          localStorage.setItem("access_token", access);
+          localStorage.setItem("refresh_token", refresh);
+          localStorage.setItem("role", role);
+          navigate(`/review`);
+          console.log("sucess");
+        } else {
+          toast.error("Login error");
+        }
+      } catch (err) {
+        console.log(err);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: err.message });
+        helpers.setSubmitting(false);
+      }
+    },
   });
 
 
@@ -146,17 +148,17 @@ const Login = () => {
                     <TextField
                       autocomplete="off"
                       size="small"
-                    //   error={
-                    //     !!(formik.touched.password && formik.errors.password)
-                    //   }
+                      error={
+                        !!(formik.touched.password && formik.errors.password)
+                      }
                       fullWidth
-                    //   helperText={
-                    //     formik.touched.password && formik.errors.password
-                    //   }
+                      helperText={
+                        formik.touched.password && formik.errors.password
+                      }
                       placeholder="Password"
                       name="password"
-                    //   onBlur={formik.handleBlur}
-                    //   onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
                       type={"password"}
                       value={formik.values.password}
                       inputProps={{ maxLength: 50 }}
@@ -184,7 +186,7 @@ const Login = () => {
                     }}
                   >
                 
-                    <a href="/lead-managment">Sign In</a>
+                    Sign In
                   </Button>
                   <br />
                   {/* {capsLockOn && (
