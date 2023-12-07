@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://seaarabia.jicitsolution.com/";
+
 const REFRESH_URL = "api/token/refresh/";
 const VERIFY_URL = "api/token/verify/";
 const GENERATE_URL = "api/token/";
 const LOGOUT_URL = "api/token/blacklist/";
-
+const FORGOTPASSWORD_URL = 'account/request-otp/'
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -100,6 +100,7 @@ export const loginRequest = (data) => {
     });
 };
 
+
 export const logoutRequest = (data) => {
   let refreshToken = localStorage.getItem("refresh_token");
   return axiosInstance
@@ -107,6 +108,16 @@ export const logoutRequest = (data) => {
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while logout:", error);
+      throw error;
+    });
+};
+
+export const forgotPassword = (data) => {
+  return axiosInstance
+    .post(FORGOTPASSWORD_URL, data)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while forgot Password:", error);
       throw error;
     });
 };
