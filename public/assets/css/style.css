@@ -509,14 +509,6 @@ button {
       font-weight: 600;
       line-height: 40px; /* 125% */
     }
-    /* span {
-      color: #fff;
-      font-family: Roboto;
-      font-size: 1rem;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 25px; 
-    } */
   }
   .login-field-group {
     display: flex;

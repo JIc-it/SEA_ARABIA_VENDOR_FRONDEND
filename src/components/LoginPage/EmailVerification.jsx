@@ -7,6 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router";
 import LoginImageContainer from "./LoginImageContainer";
 import CopyWrite from "./CopyWrite";
+import { forgotPassword } from "../../axioshandle/authHandle";
 
 const EmailVerification = () => {
   const navigate = useNavigate();
@@ -24,8 +25,15 @@ const EmailVerification = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
+        // const data = {
+        //   email: values.email,
+        // };
         navigate(`/verification`);
-      } catch (err) {
+        // const { access, refresh, role } = await forgotPassword(data);
+      } 
+      
+
+      catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
