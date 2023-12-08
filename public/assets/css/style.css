@@ -521,3 +521,22 @@ button {
   .verification-conatiner {
     height: 100%;
   }
+
+
+  /* New Slider Card Css */
+
+  .new-slider {
+    width: 100%; height: 100%; padding-left: 28px; padding-right: 28px; padding-top: 12px; padding-bottom: 12px; background: white; border-radius: 6px; border: 1px #EAEBF0 solid; flex-direction: column; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex
+  }
+.new-slider-a{
+  flex-direction: column; justify-content: flex-start; align-items: center; gap: 4px; display: flex
+}
+.new-slider-t{
+  width: 46px; text-align: center; color: black; font-size: 13.33px; font-family: Roboto; font-weight: 500; line-height: 16px; word-wrap: break-word
+}
+.new-slider-p{
+  width: 48px; text-align: center; color: black; font-size: 18px; font-family: Roboto; font-weight: 600; line-height: 24px; word-wrap: break-word
+}
+.new-slider-m{
+  width: 46px; text-align: center; color: black; font-size: 12px; font-family: Roboto; font-weight: 400; line-height: 16px; word-wrap: break-word
+}

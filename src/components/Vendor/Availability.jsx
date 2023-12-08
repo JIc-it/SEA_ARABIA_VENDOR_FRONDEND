@@ -7,18 +7,18 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useSpring, animated } from 'react-spring';
 
 const cards = [
-  { id: 1, title: 'Card 1' },
-  { id: 2, title: 'Card 2' },
-  { id: 3, title: 'Card 3' },
-  { id: 4, title: 'Card 4' },
-  { id: 5, title: 'Card 5' },
-  { id: 6, title: 'Card 6' },
+  { id: 1, day: 'Mon', date: 1, month: 'Jan' },
+  { id: 2, day: 'Tue', date: 2, month: 'Jan' },
+  { id: 3, day: 'Wed', date: 3, month: 'Jan' },
+  { id: 4, day: 'Thu', date: 4, month: 'Jan' },
+  { id: 5, day: 'Fri', date: 5, month: 'Jan' },
+  { id: 6, day: 'Sat', date: 6, month: 'Jan' },
 ];
 const options = [
   {
     value: 'option1',
     label: 'Albadee',
-    sublabel: 'Yacht',
+    sublabel: 'Boat',
     extraSublabel: '2 Slots Available',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
   },
@@ -26,21 +26,21 @@ const options = [
     value: 'option2',
     label: 'Durrat AlMarina',
     sublabel: 'Yacht',
-    extraSublabel: '2 Slots Available',
+    extraSublabel: '3 Slots Available',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
   },
   {
     value: 'option3',
     label: 'AlMayaseen',
-    sublabel: 'Yacht',
-    extraSublabel: '2 Slots Available',
+    sublabel: 'Boat',
+    extraSublabel: '4 Slots Available',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
   },
   {
     value: 'option4',
     label: 'Albadee',
     sublabel: 'Yacht',
-    extraSublabel: '2 Slots Available',
+    extraSublabel: '5 Slots Available',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
   },
 ];
@@ -109,7 +109,6 @@ const Availability = ({ selectedOptions, onChange }) => {
     '12:00 PM',
     '1:00 PM',
     '2:00 PM',
-    // ... add more time slots as needed
   ];
 
   const [selectedSlots, setSelectedSlots] = useState([]);
@@ -224,7 +223,7 @@ const Availability = ({ selectedOptions, onChange }) => {
                   {/* <div className="App">
                   <Calendar year={year} month={month} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
                 </div> */}
-                  <div style={{width:'600px !important'}}>
+                  <div style={{ width: '600px !important' }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateCalendar />
                     </LocalizationProvider>
@@ -284,11 +283,15 @@ const Availability = ({ selectedOptions, onChange }) => {
                           className={`card-new ${selectedCards.includes(card.id) ? 'selected' : ''}`}
                           onClick={() => toggleCardSelection(card.id)}
                         >
-                          <h2>{card.title}</h2>
-                          <p>{card.content}</p>
+                           <div className='new-slider-t'>{card.day}</div>
+                           <div className='new-slider-p'>{card.date}</div>
+                           <div className='new-slider-m'>{card.month}</div>
+                          {/* <p>{card.day}</p> */}
+                          {/* <p>{`${card.date} ${card.month}`}</p> */}
                         </div>
                       ))}
                     </animated.div>
+                    <br/>
                     <button onClick={prevCard}>Prev</button>
                     <button onClick={nextCard}>Next</button>
                   </div>
