@@ -149,12 +149,6 @@ const Review = () => {
                                             categorylist.map((ele, i) => {
                                                 return <option id={ele.id}>{ele.name}</option>;
                                             })}
-                                        {/* {categorylist.map((data, index) =>
-                                            <option key={data.id} value={data.name}>{data.name}</option>
-                                        )} */}
-                                        {/* <option value="New Lead">All</option>
-                                        <option value="Yatch">Yatch</option>
-                                        <option value="Boat">Boat</option> */}
                                     </select>
                                 </div>
                             </div>
@@ -172,12 +166,6 @@ const Review = () => {
                                             subcategorylist.map((item, i) => {
                                                 return <option id={item.id}>{item.name}</option>;
                                             })}
-                                        {/* {subcategorylist.map((data, index) =>
-                                            <option key={data.id} value={data.name}>{data.name}</option>
-                                        )} */}
-                                        {/* <option value="New Lead">All</option>
-                                        <option value="Yatch">Yatch</option>
-                                        <option value="Boat">Boat</option> */}
                                     </select>
                                 </div>
                             </div>

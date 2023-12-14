@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useSpring, animated } from 'react-spring';
-import { getCategoryist, getSubCategoryist } from "../../axioshandle/review"
+import { getCategoryist, getSubCategoryist, subcategoryIdFilter } from "../../axioshandle/review"
 const cards = [
   { id: 1, day: 'Mon', date: 1, month: 'Jan' },
   { id: 2, day: 'Tue', date: 2, month: 'Jan' },
@@ -106,27 +106,27 @@ const Availability = ({ selectedOptions, onChange }) => {
   const [subcategorylist, setSubCategorylist] = useState([])
   const [selectedValue, setSelectedValue] = useState("New Lead");
 
-  useEffect(() => {
-    getCategoryist()
-        .then((data) => {
-            console.log(data);
-            setCategorylist(data.results);
-        })
-        .catch((error) => {
-            console.error("Error fetching distributor data:", error);
-        });
-}, []);
+  // useEffect(() => {
+  //   getCategoryist()
+  //     .then((data) => {
+  //       console.log(data);
+  //       setCategorylist(data.results);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching distributor data:", error);
+  //     });
+  // }, []);
 
-useEffect(() => {
-    getSubCategoryist()
-        .then((data) => {
-            console.log(data);
-            setSubCategorylist(data.results);
-        })
-        .catch((error) => {
-            console.error("Error fetching distributor data:", error);
-        });
-}, []);
+  // useEffect(() => {
+  //   getSubCategoryist()
+  //     .then((data) => {
+  //       console.log(data);
+  //       setSubCategorylist(data.results);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching distributor data:", error);
+  //     });
+  // }, []);
 
   const timeSlots = [
     '9:00 AM',
@@ -195,6 +195,52 @@ useEffect(() => {
     setSelectedValue(event.target.value);
   };
 
+  const handleListSubCategory = (id) => {
+    subcategoryIdFilter(id)
+        .then((data) => {
+            setSubCategorylist(data.results);
+        })
+        .catch((error) => {
+            console.error("Error fetching lead data:", error);
+        });
+};
+
+const handleCategoryChange = (e) => {
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const id = selectedOption.getAttribute("id");
+    const categoryName = e.target.value;
+    setSelectedValue(categoryName)
+    handleListSubCategory(id);
+};
+
+useEffect(() => {
+    getCategoryist()
+        .then((data) => {
+            setCategorylist(data.results);
+        })
+        .catch((error) => {
+            console.error("Error fetching Category data:", error);
+        });
+    getSubCategoryist()
+        .then((data) => {
+            setSubCategorylist(data.results);
+        })
+        .catch((error) => {
+            console.error("Error fetching Sub Category data:", error);
+        });
+}, []);
+
+
+
+
+
+const handleSubCategoryChange = (e) => {
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const id = selectedOption.getAttribute("id");
+    const subcategoryName = e.target.value;
+    console.log(id,subcategoryName,"sub-category-change");
+};
+
   return (
     <div className="page" style={{ height: "100vh", top: 20 }}>
       <div className='container'>
@@ -208,20 +254,18 @@ useEffect(() => {
                   <div className='col-lg-6'>
                     <label className="form-label">Category :</label>
                     <div className="status_dropdown">
-                      <select
-                        type="text"
-                        className="form-select mb-3 status_selector"
-                        value={selectedValue}
-                        onChange={handleSelectChange}
-                      >
-                        <option value="All">All</option>
-                        {categorylist.map((data, index) =>
-                          <option key={data.id} value={data.name}>{data.name}</option>
-                        )}
-                        {/* <option value="New Lead">All</option>
-                                        <option value="Yatch">Yatch</option>
-                                        <option value="Boat">Boat</option> */}
-                      </select>
+                    <select
+                                        type="text"
+                                        className="form-select mb-3 status_selector"
+                                        value={selectedValue}
+                                        onChange={handleCategoryChange}
+                                    >
+                                        <option value="" id={"0"}>Category</option>
+                                        {categorylist &&
+                                            categorylist.map((ele, i) => {
+                                                return <option id={ele.id}>{ele.name}</option>;
+                                            })}
+                                    </select>
                     </div>
                   </div>
                   <div className='col-lg-6'>
@@ -231,15 +275,13 @@ useEffect(() => {
                         type="text"
                         className="form-select mb-3 status_selector"
                         value={selectedValue}
-                        onChange={handleSelectChange}
+                        onChange={handleSubCategoryChange}
                       >
-                        <option value="All">All</option>
-                        {subcategorylist.map((data, index) =>
-                          <option key={data.id} value={data.name}>{data.name}</option>
-                        )}
-                        {/* <option value="New Lead">All</option>
-                                        <option value="Yatch">Yatch</option>
-                                        <option value="Boat">Boat</option> */}
+                        <option value="" id={"0"}>Sub Category</option>
+                        {subcategorylist &&
+                          subcategorylist.map((item, i) => {
+                            return <option id={item.id}>{item.name}</option>;
+                          })}
                       </select>
                     </div>
                   </div>

@@ -20,7 +20,6 @@ const Calendar = () => {
         const selectedOption = e.target.options[e.target.selectedIndex];
         const id = selectedOption.getAttribute("id");
         const districtName = e.target.value;
-    
       };
     useEffect(() => {
         getCategoryist()
