@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { Card, CardContent, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useSpring, animated } from 'react-spring';
-
+import { getCategoryist, getSubCategoryist } from "../../axioshandle/review"
 const cards = [
   { id: 1, day: 'Mon', date: 1, month: 'Jan' },
   { id: 2, day: 'Tue', date: 2, month: 'Jan' },
@@ -70,6 +70,7 @@ const Calendar = ({ year, month, onPrevMonth, onNextMonth }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const days = generateCalendar(year, month);
 
+
   return (
     <div className="calendar">
       <div className="header">
@@ -101,6 +102,31 @@ const Calendar = ({ year, month, onPrevMonth, onNextMonth }) => {
   );
 };
 const Availability = ({ selectedOptions, onChange }) => {
+  const [categorylist, setCategorylist] = useState([])
+  const [subcategorylist, setSubCategorylist] = useState([])
+  const [selectedValue, setSelectedValue] = useState("New Lead");
+
+  useEffect(() => {
+    getCategoryist()
+        .then((data) => {
+            console.log(data);
+            setCategorylist(data.results);
+        })
+        .catch((error) => {
+            console.error("Error fetching distributor data:", error);
+        });
+}, []);
+
+useEffect(() => {
+    getSubCategoryist()
+        .then((data) => {
+            console.log(data);
+            setSubCategorylist(data.results);
+        })
+        .catch((error) => {
+            console.error("Error fetching distributor data:", error);
+        });
+}, []);
 
   const timeSlots = [
     '9:00 AM',
@@ -165,6 +191,10 @@ const Availability = ({ selectedOptions, onChange }) => {
     setIndex((prevIndex) => (prevIndex - 1 + cards.length) % cards.length);
   };
 
+  const handleSelectChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+
   return (
     <div className="page" style={{ height: "100vh", top: 20 }}>
       <div className='container'>
@@ -175,29 +205,43 @@ const Availability = ({ selectedOptions, onChange }) => {
                 <div className='row'>
                   <h2>Mark Availability</h2>
                   <h3>Service Type</h3>
-                  <div className='col-lg-4'>
-                    <label class="card">
-                      <input name="plan" class="radio" type="radio" checked />
-                      <span class="plan-details">
-                        <span class="plan-type">Boat</span>
-                      </span>
-                    </label>
+                  <div className='col-lg-6'>
+                    <label className="form-label">Category :</label>
+                    <div className="status_dropdown">
+                      <select
+                        type="text"
+                        className="form-select mb-3 status_selector"
+                        value={selectedValue}
+                        onChange={handleSelectChange}
+                      >
+                        <option value="All">All</option>
+                        {categorylist.map((data, index) =>
+                          <option key={data.id} value={data.name}>{data.name}</option>
+                        )}
+                        {/* <option value="New Lead">All</option>
+                                        <option value="Yatch">Yatch</option>
+                                        <option value="Boat">Boat</option> */}
+                      </select>
+                    </div>
                   </div>
-                  <div className='col-lg-4'>
-                    <label class="card">
-                      <input name="plan" class="radio" type="radio" checked />
-                      <span class="plan-details">
-                        <span class="plan-type">Yacht</span>
-                      </span>
-                    </label>
-                  </div>
-                  <div className='col-lg-4'>
-                    <label class="card">
-                      <input name="plan" class="radio" type="radio" checked />
-                      <span class="plan-details">
-                        <span class="plan-type">Jet Ski</span>
-                      </span>
-                    </label>
+                  <div className='col-lg-6'>
+                    <label className="form-label">Sub Category :</label>
+                    <div className="status_dropdown">
+                      <select
+                        type="text"
+                        className="form-select mb-3 status_selector"
+                        value={selectedValue}
+                        onChange={handleSelectChange}
+                      >
+                        <option value="All">All</option>
+                        {subcategorylist.map((data, index) =>
+                          <option key={data.id} value={data.name}>{data.name}</option>
+                        )}
+                        {/* <option value="New Lead">All</option>
+                                        <option value="Yatch">Yatch</option>
+                                        <option value="Boat">Boat</option> */}
+                      </select>
+                    </div>
                   </div>
                   <h2>Select Machine</h2>
                   <Select
@@ -283,15 +327,15 @@ const Availability = ({ selectedOptions, onChange }) => {
                           className={`card-new ${selectedCards.includes(card.id) ? 'selected' : ''}`}
                           onClick={() => toggleCardSelection(card.id)}
                         >
-                           <div className='new-slider-t'>{card.day}</div>
-                           <div className='new-slider-p'>{card.date}</div>
-                           <div className='new-slider-m'>{card.month}</div>
+                          <div className='new-slider-t'>{card.day}</div>
+                          <div className='new-slider-p'>{card.date}</div>
+                          <div className='new-slider-m'>{card.month}</div>
                           {/* <p>{card.day}</p> */}
                           {/* <p>{`${card.date} ${card.month}`}</p> */}
                         </div>
                       ))}
                     </animated.div>
-                    <br/>
+                    <br />
                     <button onClick={prevCard}>Prev</button>
                     <button onClick={nextCard}>Next</button>
                   </div>

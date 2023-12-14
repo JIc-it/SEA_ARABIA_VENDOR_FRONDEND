@@ -2,16 +2,13 @@ import axios from "axios";
 
 const API_BASE_URL = "https://seaarabia.jicitsolution.com/";
 
-
-// const axiosInstance = axios.create({
-//     baseURL: API_BASE_URL,
-//     timeout: 10000,
-// });
-
 const REFRESH_URL = "api/token/refresh/";
 const VERIFY_URL = "api/token/verify/";
 const GENERATE_URL = "api/token/";
 const LOGOUT_URL = "api/token/blacklist/";
+const getOTPFromEmailUrl = "account/request-otp/";
+const verifyOTPUrl = "/account/verify-otp/";
+const resetPasswordUrl = "/account/reset-passwordnew/";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -107,7 +104,6 @@ export const loginRequest = (data) => {
     });
 };
 
-
 export const logoutRequest = (data) => {
   let refreshToken = localStorage.getItem("refresh_token");
   return axiosInstance
@@ -119,51 +115,34 @@ export const logoutRequest = (data) => {
     });
 };
 
+export const getOTPFromEmail = (email) => {
+  return axiosInstance
+    .post(getOTPFromEmailUrl, { email: email })
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while OTP from Email:", error);
+      throw error;
+    });
+};
 
+export const verifyOTP = (data) => {
+  return axiosInstance
+    .post(verifyOTPUrl, data)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while Verify OTP:", error);
+      throw error;
+    });
+};
 
-// if (localStorage.getItem("refresh_token")) {
-//   const refreshAccessToken = async () => {
-//     const refreshToken = localStorage.getItem("refresh_token");
-//     const response = await axiosInstance.post("/api/token/refresh/", {
-//       refresh: refreshToken,
-//     });
-//     if (response.data && response.data.access) {
-//       const newAccessToken = response.data.access;
-//       localStorage.setItem("access_token", newAccessToken);
-//       isRefreshing = false;
-//       return newAccessToken;
-//     }
-//   };
-
-//   axiosInstance.interceptors.request.use(async (config) => {
-//     if (
-//       config.url !== "/account/token/" &&
-//       localStorage.getItem("access_token")
-//     ) {
-//       const accessToken = localStorage.getItem("access_token");
-//       config.headers["Authorization"] = `Bearer ${accessToken}`;
-//     }
-//     return config;
-//   }, undefined);
-
-//   axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//       if (error.response && error.response.status === 401) {
-//         if (!isRefreshing) {
-//           isRefreshing = true;
-//           const accessToken = await refreshAccessToken();
-
-//           if (accessToken) {
-//             localStorage.setItem("access_token", accessToken);
-//             error.config.headers["Authorization"] = `Bearer ${accessToken}`;
-//             return axiosInstance(error.config);
-//           }
-//         }
-//       }
-//       return Promise.reject(error);
-//     }
-//   );
-// }
+export const loginResetPassword = (data) => {
+  return axiosInstance
+    .post(resetPasswordUrl, data)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while Reset Password:", error);
+      throw error;
+    });
+};
 
 export default axiosInstance;

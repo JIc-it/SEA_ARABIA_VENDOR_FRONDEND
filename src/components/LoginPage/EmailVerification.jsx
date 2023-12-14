@@ -3,11 +3,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-// import CopyWrite from "../components/CopyWrite";
-import { useNavigate } from "react-router";
-import LoginImageContainer from "./LoginImageContainer";
 import CopyWrite from "./CopyWrite";
-import { forgotPassword } from "../../axioshandle/authHandle";
+import { useNavigate } from "react-router";
+import { getOTPFromEmail } from "../../axioshandle/authHandle";
+import LoginImageContainer from "./LoginImageContainer";
 
 const EmailVerification = () => {
   const navigate = useNavigate();
@@ -25,26 +24,33 @@ const EmailVerification = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        // const data = {
-        //   email: values.email,
-        // };
-        navigate(`/verification`);
-        // const { access, refresh, role } = await forgotPassword(data);
-      } 
-      
+        setIsLoading(true);
+        getOTPFromEmail(values.emailVerification)
+          .then((data) => {
+            navigate(`/verification/${values.emailVerification}/${data.user_id}`);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            helpers.setStatus({ success: false });
+            helpers.setErrors({ submit: error.response.data?.detail }); // Set the error message in formik
+            helpers.setSubmitting(false);
+            console.error("Error fetching lead data:", error);
+          });
 
-      catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
         setIsLoading(false);
+      } catch (err) {
+        helpers.setStatus({ success: false });
+        // helpers.setErrors({ submit: err.message });
+        helpers.setSubmitting(false);
+        setIsLoading(false); // Reset loading state on error
       }
     },
   });
+  console.log(formik.errors.submit);
   return (
     <div className="contaier-fluid" style={{ overflowX: "hidden" }}>
       <div className="row">
-        <LoginImageContainer />
+      <LoginImageContainer />
 
         <div className="col-md-6 p-0 ">
           <Box
@@ -109,7 +115,7 @@ const EmailVerification = () => {
                       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
                       textTransform: "none",
                     }}
-                    disabled={isLoading}
+                    disabled={isLoading} // Disable the button when loading
                   >
                     {isLoading ? (
                       <CircularProgress size={24} color="inherit" />
@@ -123,7 +129,6 @@ const EmailVerification = () => {
               </div>
             </Box>
           </Box>
-
           <div className="copy-write-container">
             <CopyWrite />
           </div>

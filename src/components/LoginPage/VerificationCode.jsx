@@ -15,14 +15,19 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
-// import CopyWrite from "../components/CopyWrite";
-// import { passwordRegex } from "../helpers";
+import { passwordRegex } from "../../helpers";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router";
-import LoginImageContainer from "./LoginImageContainer";
+import { useNavigate, useParams } from "react-router";
+import { getOTPFromEmail, verifyOTP } from "../../axioshandle/authHandle";
+import { toast } from "react-toastify";
 import CopyWrite from "./CopyWrite";
+import LoginImageContainer from "./LoginImageContainer";
 
 const VerificationCode = () => {
+  const params = useParams();
+  const verificationEmail = params?.id;
+  const userID = params?.userId;
+
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const formik = useFormik({
@@ -36,13 +41,33 @@ const VerificationCode = () => {
         .required("Verification Code is required."),
     }),
     onSubmit: async (values, helpers) => {
-      setIsLoading(true);
-      navigate(`/resetpassword`);
+      if (!isLoading) {
+        setIsLoading(true);
+
+        verifyOTP({ otp: values.verificationCode, user_id: userID })
+          .then((data) => {
+            navigate(`/resetpassword/${userID}`);
+            // setIsLoading(false);
+          })
+          .catch((error) => {
+            helpers.setStatus({ success: false });
+            helpers.setErrors({ submit: error.response.data?.detail }); // Set the error message in formik
+            helpers.setSubmitting(false);
+            console.error("Error fetching lead data:", error);
+          });
+
+        setIsLoading(false);
+      }
     },
   });
 
   const handleResendEmail = async () => {
-
+    getOTPFromEmail(verificationEmail)
+      .then((data) => {})
+      .catch((error) => {
+        toast.error(error.response.data?.detail);
+        console.error("Error fetching lead data:", error);
+      });
   };
 
   const [loginDetails, setLoginDetails] = useState();
@@ -82,21 +107,22 @@ const VerificationCode = () => {
                   padding: "2rem",
                 }}
               >
-            
                 <Stack spacing={1} sx={{ mb: 1 }}>
                   <Typography variant="h5">Forgot Password</Typography>
                 </Stack>
                 <Stack spacing={1} sx={{ mb: 1 }}>
                   <h6 style={{ fontSize: "14px", fontWeight: "400" }}>
                     {" "}
-                    The verification code has been sent to
-                    <span style={{ color: "#2176FF" }}></span>
+                    The verification code has been sent to {""}
+                    <span style={{ color: "#2176FF" }}>
+                      {verificationEmail}
+                    </span>
                   </h6>
                 </Stack>
                 <Stack spacing={1} sx={{ mb: 2 }}>
                   <div style={{ display: "flex" }}>
                     <Link
-                      href="/auth/email-verification"
+                      href="/email-verification"
                       underline="hover"
                       variant="subtitle2"
                     >
@@ -179,7 +205,7 @@ const VerificationCode = () => {
                 </form>
               </div>
             </Box>
-            {/* <CopyWrite /> */}
+            <CopyWrite />
           </Box>
 
           <div className="copy-write-container">

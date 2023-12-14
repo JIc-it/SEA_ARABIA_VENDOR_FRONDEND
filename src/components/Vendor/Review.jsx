@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import { getCategoryist, getSubCategoryist, getServiceFilterList, getServiceReviewFilter } from "../../axioshandle/review"
+import { getCategoryist, getSubCategoryist, getServiceFilterList, getServiceReviewFilter, subcategoryIdFilter } from "../../axioshandle/review"
 
 const Review = () => {
     const [categorylist, setCategorylist] = useState([])
@@ -9,6 +9,8 @@ const Review = () => {
     const [selectedValue, setSelectedValue] = useState("New Lead");
     const [filterdataid, setfilterid] = useState("")
     const [filterdataidData, setfilteridData] = useState([])
+    const [stateList, setStateList] = useState();
+    const [locationList, setLocationList] = useState();
     const [filtering, setFiltering] = useState({
         search: "",
         categoryid: "",
@@ -23,27 +25,77 @@ const Review = () => {
         })
     }
 
-    useEffect(() => {
-        getCategoryist()
-            .then((data) => {
-                console.log(data);
-                setCategorylist(data.results);
-            })
-            .catch((error) => {
-                console.error("Error fetching distributor data:", error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     getCategoryist()
+    //         .then((data) => {
+    //             console.log(data);
+    //             setCategorylist(data.results);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching Category list data:", error);
+    //         });
+    // }, []);
 
-    useEffect(() => {
-        getSubCategoryist()
+    // useEffect(() => {
+    //     getSubCategoryist()
+    //         .then((data) => {
+    //             console.log(data);
+    //             setSubCategorylist(data.results);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching SubCategory list data:", error);
+    //         });
+    // }, []);
+
+    const handleListSubCategory = (id) => {
+        subcategoryIdFilter(id)
             .then((data) => {
-                console.log(data);
                 setSubCategorylist(data.results);
             })
             .catch((error) => {
-                console.error("Error fetching distributor data:", error);
+                console.error("Error fetching lead data:", error);
+            });
+    };
+
+    const handleCategoryChange = (e) => {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const id = selectedOption.getAttribute("id");
+        const categoryName = e.target.value;
+        setSelectedValue(categoryName)
+        handleListSubCategory(id);
+    };
+    
+    useEffect(() => {
+        getCategoryist()
+            .then((data) => {
+                setCategorylist(data.results);
+            })
+            .catch((error) => {
+                console.error("Error fetching Category data:", error);
+            });
+        getSubCategoryist()
+            .then((data) => {
+                setSubCategorylist(data.results);
+            })
+            .catch((error) => {
+                console.error("Error fetching Sub Category data:", error);
             });
     }, []);
+
+
+
+    
+
+    const handleSubCategoryChange = (e) => {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const id = selectedOption.getAttribute("id");
+        const subcategoryName = e.target.value;
+        console.log(id,subcategoryName,"sub-category-change");
+    };
+
+    const handleSelectChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
 
     useEffect(() => {
         getServiceFilterList(filtering)
@@ -52,7 +104,7 @@ const Review = () => {
                 setserviceFilterList(data.results);
             })
             .catch((error) => {
-                console.error("Error fetching distributor data:", error);
+                console.error("Error fetching Service Filter List data:", error);
             });
     }, [filtering]);
 
@@ -63,13 +115,9 @@ const Review = () => {
                 setfilteridData(data.results);
             })
             .catch((error) => {
-                console.error("Error fetching distributor data:", error);
+                console.error("Error fetching Service Review Filter data:", error);
             });
     }, [filterdataid]);
-
-    const handleSelectChange = (event) => {
-        setSelectedValue(event.target.value);
-    };
     return (
         <div className="page" style={{ height: "100vh", top: 20 }}>
             <div className='container'>
@@ -94,12 +142,16 @@ const Review = () => {
                                         type="text"
                                         className="form-select mb-3 status_selector"
                                         value={selectedValue}
-                                        onChange={handleSelectChange}
+                                        onChange={handleCategoryChange}
                                     >
-                                        <option value="All">All</option>
-                                        {categorylist.map((data, index) =>
+                                        <option value="" id={"0"}>Category</option>
+                                        {categorylist &&
+                                            categorylist.map((ele, i) => {
+                                                return <option id={ele.id}>{ele.name}</option>;
+                                            })}
+                                        {/* {categorylist.map((data, index) =>
                                             <option key={data.id} value={data.name}>{data.name}</option>
-                                        )}
+                                        )} */}
                                         {/* <option value="New Lead">All</option>
                                         <option value="Yatch">Yatch</option>
                                         <option value="Boat">Boat</option> */}
@@ -107,18 +159,22 @@ const Review = () => {
                                 </div>
                             </div>
                             <div className='col-lg-12'>
-                                <label className="form-label">Sub Category : :</label>
+                                <label className="form-label">Sub Category :</label>
                                 <div className="status_dropdown">
                                     <select
                                         type="text"
                                         className="form-select mb-3 status_selector"
                                         value={selectedValue}
-                                        onChange={handleSelectChange}
+                                        onChange={handleSubCategoryChange}
                                     >
-                                        <option value="All">All</option>
-                                        {subcategorylist.map((data, index) =>
+                                        <option value="" id={"0"}>Sub Category</option>
+                                        {subcategorylist &&
+                                            subcategorylist.map((item, i) => {
+                                                return <option id={item.id}>{item.name}</option>;
+                                            })}
+                                        {/* {subcategorylist.map((data, index) =>
                                             <option key={data.id} value={data.name}>{data.name}</option>
-                                        )}
+                                        )} */}
                                         {/* <option value="New Lead">All</option>
                                         <option value="Yatch">Yatch</option>
                                         <option value="Boat">Boat</option> */}
@@ -141,9 +197,7 @@ const Review = () => {
                                             </div>
                                         </span>
                                     </label>
-
                                 )}
-
                             </div>
                         </div>
                     </div>

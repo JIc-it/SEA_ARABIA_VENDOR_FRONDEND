@@ -1,4 +1,5 @@
 import axiosInstance from "./authHandle";
+const bookinglistIdURl="booking/bookings/"
 
 export const getVendorList = () => {
   return axiosInstance
