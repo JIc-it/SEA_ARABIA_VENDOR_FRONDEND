@@ -1,14 +1,54 @@
+import React from 'react'
+import { useState, useEffect } from "react";
+import { getTotalBook } from "../../axioshandle/leadMangement"
+
 function HeaderTiles(props) {
+  const [totalBooking, setTotalOrderBook] = useState(0);
+  const [totayBooking, settotayOrderBook] = useState(0);
+  const [confirmBooking, setConfirmOrderBook] = useState(0);
+  const [cancelBooking, setCencelOrderBook] = useState(0);
+
+  useEffect(() => {
+    getTotalBook()
+      .then((data) => {
+        setTotalOrderBook(data.total_booking);
+      })
+      .catch((error) => {
+        console.error("Error fetching total booking data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    getTotalBook()
+      .then((data) => {
+        settotayOrderBook(data.today_booking);
+      })
+      .catch((error) => {
+        console.error("Error fetching today booking data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    getTotalBook()
+      .then((data) => {
+        setConfirmOrderBook(data.total_confirmed_booking);
+      })
+      .catch((error) => {
+        console.error("Error fetching confirmed booking data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    getTotalBook()
+      .then((data) => {
+        setCencelOrderBook(data.total_cancelled_booking);
+      })
+      .catch((error) => {
+        console.error("Error fetching cancelled booking data:", error);
+      });
+  }, []);
   return (
     <div className="row row-cards">
-      {/* <style>
-         .span_border{
-            borderRadius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.30);
-            background: linear-gradient(135deg, #5C4AF2 0%, #988DF5 100%);
-         }
-        </style> */}
-
       <div className="col-sm-6 col-lg-3">
         <div className="card card-sm" style={{ borderRadius: "12px" }}>
           <div className="card-body">
@@ -46,7 +86,7 @@ function HeaderTiles(props) {
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  469
+                  {totalBooking}
                 </div>
               </div>
             </div>
@@ -86,13 +126,13 @@ function HeaderTiles(props) {
               </div>
               <div className="col">
                 <div className="font-weight-medium count_card_heading">
-                  New Bookings
+                  Today Bookings
                 </div>
                 <div
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  123
+                  {totayBooking}
                 </div>
               </div>
             </div>
@@ -138,7 +178,7 @@ function HeaderTiles(props) {
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  326
+                  {confirmBooking}
                 </div>
               </div>
             </div>
@@ -184,7 +224,7 @@ function HeaderTiles(props) {
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  153
+                  {cancelBooking}
                 </div>
               </div>
             </div>
