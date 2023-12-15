@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { getCategoryist, getSubCategoryist, getServiceFilterList, getServiceReviewFilter } from "../../axioshandle/review"
+import { getCategoryist, getSubCategoryist, getServiceFilterList, subcategoryIdFilter } from "../../axioshandle/review"
+import { getBookServiceAvailablelist, getBookServiceFilter } from "../../axioshandle/calendarHandle"
+
 const Calendar = () => {
     const [categorylist, setCategorylist] = useState([])
     const [subcategorylist, setSubCategorylist] = useState([])
@@ -7,41 +9,12 @@ const Calendar = () => {
     const [selectedValue, setSelectedValue] = useState("New Lead");
     const [filterdataid, setfilterid] = useState("")
     const [filterdataidData, setfilteridData] = useState([])
+    const [selectedDate, setSelectedDate] = useState("");
     const [filtering, setFiltering] = useState({
         search: "",
         categoryid: "",
         subcategoryid: ""
     })
-
-    const handleSelectChange = (event) => {
-        setSelectedValue(event.target.value);
-    };
-    const handleDistrictChange = (e) => {
-        const selectedOption = e.target.options[e.target.selectedIndex];
-        const id = selectedOption.getAttribute("id");
-        const districtName = e.target.value;
-      };
-    useEffect(() => {
-        getCategoryist()
-            .then((data) => {
-                console.log(data);
-                setCategorylist(data.results);
-            })
-            .catch((error) => {
-                console.error("Error fetching Category list data:", error);
-            });
-    }, []);
-
-    useEffect(() => {
-        getSubCategoryist()
-            .then((data) => {
-                console.log(data);
-                setSubCategorylist(data.results);
-            })
-            .catch((error) => {
-                console.error("Error fetching SubCategory list data:", error);
-            });
-    }, []);
 
     const handlefiltering = (fields) => {
         setFiltering((prev) => {
@@ -62,6 +35,63 @@ const Calendar = () => {
             });
     }, [filtering]);
 
+    //
+
+    const handleListSubCategory = (id) => {
+        subcategoryIdFilter(id)
+            .then((data) => {
+                setSubCategorylist(data.results);
+            })
+            .catch((error) => {
+                console.error("Error fetching lead data:", error);
+            });
+    };
+
+    const handleCategoryChange = (e) => {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const id = selectedOption.getAttribute("id");
+        const categoryName = e.target.value;
+        setSelectedValue(categoryName)
+        handleListSubCategory(id);
+    };
+
+    useEffect(() => {
+        getCategoryist()
+            .then((data) => {
+                setCategorylist(data.results);
+            })
+            .catch((error) => {
+                console.error("Error fetching Category data:", error);
+            });
+        getSubCategoryist()
+            .then((data) => {
+                setSubCategorylist(data.results);
+            })
+            .catch((error) => {
+                console.error("Error fetching Sub Category data:", error);
+            });
+    }, []);
+
+
+    const handleSubCategoryChange = (e) => {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const id = selectedOption.getAttribute("id");
+        const subcategoryName = e.target.value;
+        console.log(id, subcategoryName, "sub-category-change");
+    };
+
+    // Service Booking Availability
+    useEffect(() => {
+        getBookServiceFilter(filterdataid, selectedDate)
+            .then((data) => {
+                console.log(data);
+                setfilteridData(data.results);
+            })
+            .catch((error) => {
+                console.error("Error fetching Service Review Filter data:", error);
+            });
+    }, [filterdataid, selectedDate]);
+    console.log(filterdataidData, "data");
     return (
         <div className="page" style={{ height: "100vh", top: 20 }}>
             <div className='container'>
@@ -73,17 +103,9 @@ const Calendar = () => {
                                 type="date"
                                 className="form-control"
                                 placeholder="Date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
                             />
-                            {/* <div className='col-lg-12'>
-                                <label className="form-label">Service :</label>
-                                <div className="status_dropdown">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Search"
-                                    />
-                                </div>
-                            </div> */}
                             <div className='col-lg-12'>
                                 <label className="form-label">Service :</label>
                                 <div className="status_dropdown">
@@ -98,26 +120,13 @@ const Calendar = () => {
                             <div className='col-lg-12'>
                                 <label className="form-label">Category :</label>
                                 <div className="status_dropdown">
-                                    {/* <select
+                                    <select
                                         type="text"
                                         className="form-select mb-3 status_selector"
                                         value={selectedValue}
-                                        onChange={handleSelectChange}
+                                        onChange={handleCategoryChange}
                                     >
-                                        <option value="All">All</option>
-                                        {categorylist.map((data, index) =>
-                                            <option key={data.id} value={data.name}>{data.name}</option>
-                                        )}
-                                    </select> */}
-                                    <select
-                                        defaultValue=""
-                                        className="form-select mb-3 status_selector"
-                                        placeholder="Category"
-                                        onChange={handleSelectChange}
-                                    >
-                                        <option disabled={true} value="" id={"0"}>
-                                            Category
-                                        </option>
+                                        <option value="" id={"0"}>Category</option>
                                         {categorylist &&
                                             categorylist.map((ele, i) => {
                                                 return <option id={ele.id}>{ele.name}</option>;
@@ -128,26 +137,13 @@ const Calendar = () => {
                             <div className='col-lg-12'>
                                 <label className="form-label">Sub Category :</label>
                                 <div className="status_dropdown">
-                                    {/* <select
+                                    <select
                                         type="text"
                                         className="form-select mb-3 status_selector"
                                         value={selectedValue}
-                                        onChange={handleSelectChange}
+                                        onChange={handleSubCategoryChange}
                                     >
-                                        <option value="All">All</option>
-                                        {subcategorylist.map((data, index) =>
-                                            <option key={data.id} value={data.name}>{data.name}</option>
-                                        )}
-                                    </select> */}
-                                    <select
-                                        defaultValue=""
-                                        className="form-select mb-3 status_selector"
-                                        placeholder="Sub Category"
-                                        onChange={handleSelectChange}
-                                    >
-                                        <option disabled={true} value="" id={"0"}>
-                                            District
-                                        </option>
+                                        <option value="" id={"0"}>Sub Category</option>
                                         {subcategorylist &&
                                             subcategorylist.map((item, i) => {
                                                 return <option id={item.id}>{item.name}</option>;
@@ -179,66 +175,25 @@ const Calendar = () => {
                     <div className='col-lg-9'>
                         <div className='row'>
                             <div className='col-lg-12'>
-                                <div class="card mb-3">
-                                    <div class="card-body p-3">
-                                        <h5 class="card-subtitle mb-2 text-muted">8:00 AM</h5>
-                                        <span className='head-text'>LA CABANE</span> &nbsp;<span className='card-id'>#SS56DG2355D</span><br />
-                                        <span className='head-text'>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
-                                            </svg>&nbsp;
-                                            1:30 Hrs</span><br />
-                                        <span class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit sed dictum aliquet sapien. Dui massa purus enim ut cras aliquet.</span><br />
-                                        <span style={{ color: '#006875' }}>Alexa Paul</span>
+                                {filterdataidData.map((data) =>
+                                    <div className="card mb-3">
+                                        <div className="card-body p-3">
+                                            <span className='head-text'>{data?.service?.name}</span> &nbsp;<span className='card-id'>{data.booking_id}</span><br />
+                                            <span className='head-text'>
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
+                                                </svg>&nbsp;
+                                                {new Date(data.start_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - {new Date(data.end_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+                                            </span><br />
+                                            <span className="card-text">{data.starting_point}</span><br />
+                                            <span style={{ color: '#006875' }}>{data?.user?.first_name} {data?.user?.last_name}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="card mb-3">
-                                    <div class="card-body p-3">
-                                        <h5 class="card-subtitle mb-2 text-muted">8:00 AM</h5>
-                                        <span className='head-text'>LA CABANE</span> &nbsp;<span className='card-id'>#SS56DG2355D</span><br />
-                                        <span className='head-text'>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
-                                            </svg>&nbsp;
-                                            1:30 Hrs</span><br />
-                                        <span class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit sed dictum aliquet sapien. Dui massa purus enim ut cras aliquet.</span><br />
-                                        <span style={{ color: '#006875' }}>Alexa Paul</span>
-                                    </div>
-                                </div>
-                                <div class="card mb-3">
-                                    <div class="card-body p-3">
-                                        <h5 class="card-subtitle mb-2 text-muted">8:00 AM</h5>
-                                        <span className='head-text'>LA CABANE</span> &nbsp;<span className='card-id'>#SS56DG2355D</span><br />
-                                        <span className='head-text'>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
-                                            </svg>&nbsp;
-                                            1:30 Hrs</span><br />
-                                        <span class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit sed dictum aliquet sapien. Dui massa purus enim ut cras aliquet.</span><br />
-                                        <span style={{ color: '#006875' }}>Alexa Paul</span>
-                                    </div>
-                                </div>
-                                <div class="card mb-3">
-                                    <div class="card-body p-3">
-                                        <h5 class="card-subtitle mb-2 text-muted">8:00 AM</h5>
-                                        <span className='head-text'>LA CABANE</span> &nbsp;<span className='card-id'>#SS56DG2355D</span><br />
-                                        <span className='head-text'>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
-                                            </svg>&nbsp;
-                                            1:30 Hrs</span><br />
-                                        <span class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit sed dictum aliquet sapien. Dui massa purus enim ut cras aliquet.</span><br />
-                                        <span style={{ color: '#006875' }}>Alexa Paul</span>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div >

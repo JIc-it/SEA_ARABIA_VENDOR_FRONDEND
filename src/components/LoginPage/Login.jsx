@@ -21,7 +21,8 @@ import LoginImageContainer from "./LoginImageContainer";
 import CopyWrite from "./CopyWrite";
 import { loginRequest } from '../../axioshandle/authHandle'
 import { passwordRegex } from "../../helpers";
-
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -146,15 +147,42 @@ const Login = () => {
                     />
                     <Typography variant="span">Password</Typography>
                     <TextField
+                      autoComplete="off"
+                      size="small"
+                      fullWidth
+                      placeholder="Password"
+                      name="password"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      type={showPassword ? "text" : "password"}
+                      value={formik.values.password}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowPassword(!showPassword)}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    {/* <TextField
                       autocomplete="off"
                       size="small"
-                      // error={
-                      //   !!(formik.touched.password && formik.errors.password)
-                      // }
+                      error={
+                        !!(formik.touched.password && formik.errors.password)
+                      }
                       fullWidth
-                      // helperText={
-                      //   formik.touched.password && formik.errors.password
-                      // }
+                      helperText={
+                        formik.touched.password && formik.errors.password
+                      }
                       placeholder="Password"
                       name="password"
                       onBlur={formik.handleBlur}
@@ -162,7 +190,7 @@ const Login = () => {
                       type={"password"}
                       value={formik.values.password}
                       inputProps={{ maxLength: 50 }}
-                    />
+                    /> */}
                   </Stack>
 
                   {formik.errors.submit && (
@@ -188,9 +216,9 @@ const Login = () => {
                     Sign In
                     {/* <a href="/lead-managment">Sign In</a> */}
                   </Button>
-                  <br />
-                  {/* {capsLockOn && (
-                    <Typography
+               {/* {capsLockOn && (
+                 <br />
+                        <Typography
                       color="rgb(33, 118, 255)"
                       sx={{ mt: 1, fontSize: "13px" }}
                       variant="body2"
