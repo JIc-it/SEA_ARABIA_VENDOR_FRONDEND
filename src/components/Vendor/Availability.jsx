@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useSpring, animated } from 'react-spring';
-import { getCategoryist, getSubCategoryist, subcategoryIdFilter, getServiceFilterList } from "../../axioshandle/review"
+import { getCategoryist, getSubCategoryist, subcategoryIdFilter, getServiceFilterList, getsServicesavailableFilterList } from "../../axioshandle/review"
 const cards = [
   { id: 1, day: 'Mon', date: 1, month: 'Jan' },
   { id: 2, day: 'Tue', date: 2, month: 'Jan' },
@@ -108,20 +108,43 @@ const Availability = ({ selectedOptions, onChange }) => {
   const [selectedValue, setSelectedValue] = useState("New Lead");
   const [selectedDate, setSelectedDate] = useState("");
   const [servicefilterlist, setserviceFilterList] = useState([])
+  const [optionmachine, setoptionmachine] = useState([])
+const[timeSlots, setTimeSlots]= useState([])
   const [filterdataid, setfilterid] = useState("")
   const [filtering, setFiltering] = useState({
     search: "",
     categoryid: "",
     subcategoryid: ""
   })
-  const timeSlots = [
-    '9:00 AM',
-    '10:00 AM',
-    '11:00 AM',
-    '12:00 PM',
-    '1:00 PM',
-    '2:00 PM',
-  ];
+
+// //  load time slot
+const onChangeMachine  =(e)=>{
+  
+  if(selectedDate&& e?.id){
+    const data ={date:selectedDate, machineId:e?.id}
+    getsServicesavailableFilterList(data).then((data) => {
+      data?.map((item)=>{
+        setTimeSlots(item?.time)
+        console.log('date', item?.time)
+      })
+      
+    
+     })
+     .catch((error) => {
+       console.error("Error fetching lead data:", error);
+     });
+    }
+}
+
+  // getsServicesavailableFilterList
+  // const timeSlots = [
+  //   '9:00 AM',
+  //   '10:00 AM',
+  //   '11:00 AM',
+  //   '12:00 PM',
+  //   '1:00 PM',
+  //   '2:00 PM',
+  // ];
 
   const [selectedSlots, setSelectedSlots] = useState([]);
 
@@ -148,6 +171,7 @@ const Availability = ({ selectedOptions, onChange }) => {
     setMonth(month === 11 ? 0 : month + 1);
     setYear(month === 11 ? year + 1 : year);
   };
+
 
   // Slider Start
 
@@ -197,6 +221,7 @@ const Availability = ({ selectedOptions, onChange }) => {
     const categoryName = e.target.value;
     setSelectedValue(categoryName)
     handleListSubCategory(id);
+    
   };
 
   useEffect(() => {
@@ -232,6 +257,14 @@ const Availability = ({ selectedOptions, onChange }) => {
     const id = selectedOption.getAttribute("id");
     const subcategoryName = e.target.value;
     console.log(id, subcategoryName, "sub-category-change");
+    const data = {subcategoryid: id}
+    getServiceFilterList(data).then((data) => {
+  
+     setoptionmachine(data?.results)
+    })
+    .catch((error) => {
+      console.error("Error fetching lead data:", error);
+    });
   };
 
   return (
@@ -299,15 +332,16 @@ const Availability = ({ selectedOptions, onChange }) => {
                   <h2>Select Machine</h2>
                   <Select
                     // isMulti
-                    options={options}
+                    options={optionmachine}
                     value={selectedOptions}
-                    onChange={onChange}
+                    onChange={onChangeMachine}
                     getOptionLabel={(option) => (
+                   
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src={option.image} alt={option.label} style={{ width: '40px', marginRight: '8px' }} />
+                        <img src={option.service_image[0]?.thumbnail} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
                         <div>
                           <div>
-                            <strong>{option.label}</strong>
+                            <strong>{option?.name}</strong>
                           </div>
                           <div style={{ fontSize: '12px', color: 'gray' }}>
                             {option.sublabel} - {option.extraSublabel}
@@ -328,14 +362,14 @@ const Availability = ({ selectedOptions, onChange }) => {
                   <br></br>
                   <h4>Time Slot</h4>
                   <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {timeSlots.map((slot, index) => (
+                    {timeSlots?.map((slot, index) => (
                       <div
                         key={index}
                         style={{
                           width: '120px',
                           margin: '8px',
                           cursor: 'pointer',
-                          backgroundColor: selectedSlots.includes(slot) ? '#0A77FF' : 'white',
+                          backgroundColor: selectedSlots.includes(slot?.time) ? '#0A77FF' : 'white',
                           borderRadius: '4px',
                           border: '1px solid #ccc',
                           padding: '8px',
@@ -343,10 +377,10 @@ const Availability = ({ selectedOptions, onChange }) => {
                           flexDirection: 'column',
                           alignItems: 'center',
                         }}
-                        onClick={() => handleSlotClick(slot)}
+                        onClick={() => handleSlotClick(slot?.time)}
                       >
                         <Typography variant="body2">
-                          {slot}
+                          {slot?.time}
                         </Typography>
                       </div>
                     ))}
@@ -394,14 +428,14 @@ const Availability = ({ selectedOptions, onChange }) => {
                   <br></br>
                   <h4>Time Slot</h4>
                   <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {timeSlots.map((slot, index) => (
+                    {timeSlots?.map((slot, index) => (
                       <div
                         key={index}
                         style={{
                           width: '120px',
                           margin: '8px',
                           cursor: 'pointer',
-                          backgroundColor: selectedSlots.includes(slot) ? '#0A77FF' : 'white',
+                          backgroundColor: selectedSlots.includes(slot?.time) ? '#0A77FF' : 'white',
                           borderRadius: '4px',
                           border: '1px solid #ccc',
                           padding: '8px',
@@ -409,10 +443,10 @@ const Availability = ({ selectedOptions, onChange }) => {
                           flexDirection: 'column',
                           alignItems: 'center',
                         }}
-                        onClick={() => handleSlotClick(slot)}
+                        onClick={() => handleSlotClick(slot?.time)}
                       >
                         <Typography variant="body2">
-                          {slot}
+                          {slot?.time}
                         </Typography>
                       </div>
                     ))}

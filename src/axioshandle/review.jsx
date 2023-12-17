@@ -29,6 +29,15 @@ export const getServiceFilterList = (data) => {
       throw error;
     });
 };
+export const getsServicesavailableFilterList = (data) => {
+  return axiosInstance
+    .get(`service/servicesavailable/${data?.date}/${data?.machineId}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while fetching lead request:", error);
+      throw error;
+    });
+};
 export const getServiceReviewFilter = (id) => {
   return axiosInstance
     .get(`service/service-review-list/${id}`)

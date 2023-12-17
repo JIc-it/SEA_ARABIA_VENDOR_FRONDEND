@@ -1,9 +1,11 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import {getTotalBook} from "../../axioshandle/leadMangement"
+import {getTotalBook, getbookingList} from "../../axioshandle/leadMangement"
 
 const BookingView = () => {
     const [totalBooking, setTotalOrderBook] = useState(0);
+    const [BookingData, setBookingData] = useState('');
+
     
     // const handleListSubCategory = (id) => {
     //     subcategoryIdFilter(id)
@@ -14,7 +16,19 @@ const BookingView = () => {
     //             console.error("Error fetching lead data:", error);
     //         });
     // };
+    // getbookingList
 
+    useEffect(() => {
+        getbookingList()
+          .then((data) => {
+            console.log(data, 'databooking')
+            // setBookingData(data.total_booking);
+          })
+          .catch((error) => {
+            console.error("Error fetching distributor data:", error);
+          });
+      }, []);
+      
     useEffect(() => {
         getTotalBook()
           .then((data) => {
