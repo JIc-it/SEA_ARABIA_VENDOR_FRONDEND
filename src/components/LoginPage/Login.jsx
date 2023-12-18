@@ -173,24 +173,6 @@ const Login = () => {
                         ),
                       }}
                     />
-                    {/* <TextField
-                      autocomplete="off"
-                      size="small"
-                      error={
-                        !!(formik.touched.password && formik.errors.password)
-                      }
-                      fullWidth
-                      helperText={
-                        formik.touched.password && formik.errors.password
-                      }
-                      placeholder="Password"
-                      name="password"
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                      type={"password"}
-                      value={formik.values.password}
-                      inputProps={{ maxLength: 50 }}
-                    /> */}
                   </Stack>
 
                   {formik.errors.submit && (
@@ -214,25 +196,7 @@ const Login = () => {
                     }}
                   >
                     Sign In
-                    {/* <a href="/lead-managment">Sign In</a> */}
                   </Button>
-               {/* {capsLockOn && (
-                 <br />
-                        <Typography
-                      color="rgb(33, 118, 255)"
-                      sx={{ mt: 1, fontSize: "13px" }}
-                      variant="body2"
-                    >
-                      Caps Lock is ON
-                    </Typography>
-                  )} */}
-                  {/* <span style={{ fontSize: "12px", color: "red" }}>
-                    {loginDetails &&
-                      loginDetails.status != 200 &&
-                      loginDetails.data &&
-                      loginDetails.data.detail}
-                  </span> */}
-
                   <Typography
                     color="text.secondary"
                     variant="body2"

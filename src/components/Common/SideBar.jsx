@@ -148,7 +148,7 @@ function SideBar() {
               <div className="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
                 <div className="card">
                   <div className="card-header">
-                    <h3 className="card-title">Last updates</h3>
+                    <h3 className="card-title">Last Updates</h3>
                   </div>
                   <div className="list-group list-group-flush list-group-hoverable">
                     <div className="list-group-item">
@@ -327,7 +327,7 @@ function SideBar() {
                 }}
               ></span>
               <div className="d-none d-xl-block ps-2">
-                <div>Paweł Kuna</div>
+                <div>Paweł lKuna</div>
                 <div className="mt-1 small text-secondary">UI Designer</div>
               </div>
             </button>
