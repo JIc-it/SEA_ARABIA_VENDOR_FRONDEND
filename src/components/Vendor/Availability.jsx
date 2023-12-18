@@ -5,7 +5,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useSpring, animated } from 'react-spring';
-import { getCategoryist, getSubCategoryist, subcategoryIdFilter, getServiceFilterList, getsServicesavailableFilterList } from "../../axioshandle/review"
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+import CircularProgress from "@mui/material/CircularProgress";
+import {
+  getCategoryist,
+  getSubCategoryist,
+  subcategoryIdFilter,
+  getServiceFilterList,
+  getsServicesavailableFilterList,
+  createAvailablityTime
+} from "../../axioshandle/review"
 const cards = [
   { id: 1, day: 'Mon', date: 1, month: 'Jan' },
   { id: 2, day: 'Tue', date: 2, month: 'Jan' },
@@ -15,101 +26,15 @@ const cards = [
   { id: 6, day: 'Sat', date: 6, month: 'Jan' },
 ];
 
-const options = [
-  {
-    value: 'option1',
-    label: 'Albadee',
-    sublabel: 'Boat',
-    extraSublabel: '2 Slots Available',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
-  },
-  {
-    value: 'option2',
-    label: 'Durrat AlMarina',
-    sublabel: 'Yacht',
-    extraSublabel: '3 Slots Available',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
-  },
-  {
-    value: 'option3',
-    label: 'AlMayaseen',
-    sublabel: 'Boat',
-    extraSublabel: '4 Slots Available',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
-  },
-  {
-    value: 'option4',
-    label: 'Albadee',
-    sublabel: 'Yacht',
-    extraSublabel: '5 Slots Available',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHIbYLk8_AsevQ8CtmLeBBxAoVmBqYIveELw&usqp=CAU',
-  },
-];
-
-const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-
-const generateCalendar = (year, month) => {
-  const totalDays = daysInMonth(year, month);
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-  const days = [];
-
-  // Add empty cells for days before the first day of the month
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push(null);
-  }
-
-  // Add days of the month
-  for (let i = 1; i <= totalDays; i++) {
-    days.push(i);
-  }
-
-  return days;
-};
-
-
-const Calendar = ({ year, month, onPrevMonth, onNextMonth }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const days = generateCalendar(year, month);
-
-
-  return (
-    <div className="calendar">
-      <div className="header">
-        <div className="nav" onClick={onPrevMonth}>
-          <i className="arrow left"></i>
-        </div>
-        <h2>{new Date(year, month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h2>
-        <div className="nav" onClick={onNextMonth}>
-          <i className="arrow right"></i>
-        </div>
-      </div>
-      <div className="days">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="day">{day}</div>
-        ))}
-      </div>
-      <div className="grid">
-        {days.map((day, index) => (
-          <div
-            key={index}
-            className={`day ${day !== null ? 'active' : ''} ${day === selectedDate ? 'selected' : ''}`}
-            onClick={() => setSelectedDate(day)}
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-const Availability = ({ selectedOptions, onChange }) => {
+const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, close }) => {
   const [categorylist, setCategorylist] = useState([])
   const [subcategorylist, setSubCategorylist] = useState([])
   const [selectedValue, setSelectedValue] = useState("New Lead");
   const [selectedDate, setSelectedDate] = useState("");
   const [servicefilterlist, setserviceFilterList] = useState([])
   const [optionmachine, setoptionmachine] = useState([])
-const[timeSlots, setTimeSlots]= useState([])
+  const [timeSlots, setTimeSlots] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
   const [filterdataid, setfilterid] = useState("")
   const [filtering, setFiltering] = useState({
     search: "",
@@ -117,34 +42,79 @@ const[timeSlots, setTimeSlots]= useState([])
     subcategoryid: ""
   })
 
-// //  load time slot
-const onChangeMachine  =(e)=>{
-  
-  if(selectedDate&& e?.id){
-    const data ={date:selectedDate, machineId:e?.id}
-    getsServicesavailableFilterList(data).then((data) => {
-      data?.map((item)=>{
-        setTimeSlots(item?.time)
-        console.log('date', item?.time)
-      })
-      
-    
-     })
-     .catch((error) => {
-       console.error("Error fetching lead data:", error);
-     });
-    }
-}
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required("Name is required")
+      .max(20, "Name must be at most 20 characters"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    mobile: Yup.string().required("Mobile is required"),
+    location: Yup.string().required("Location is required"),
+  });
 
-  // getsServicesavailableFilterList
-  // const timeSlots = [
-  //   '9:00 AM',
-  //   '10:00 AM',
-  //   '11:00 AM',
-  //   '12:00 PM',
-  //   '1:00 PM',
-  //   '2:00 PM',
-  // ];
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      mobile: "",
+      location: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      setIsLoading(true);
+
+      if (!isLoading) {
+        try {
+          const data = {
+            first_name: values.name,
+            last_name: "",
+            role: "Vendor",
+            email: values.email,
+            mobile: `+965 ${values.mobile}`,
+            location: values.location,
+          };
+
+          const adminData = await createAvailablityTime(data);
+
+          if (adminData) {
+            setIsRefetch(!isRefetch);
+            toast.success("Mark as Avaivable Added Successfully.");
+            close();
+            setIsLoading(false);
+          } else {
+            console.error("Error while creating Admin:", adminData.error);
+            setIsLoading(false);
+          }
+          setIsLoading(false);
+        } catch (err) {
+          console.log(err);
+          err.response.data.email && toast.error(err.response.data.email[0]);
+          err.response.data.mobile && toast.error(err.response.data.mobile[0]);
+          setIsLoading(false);
+        }
+      }
+    },
+  });
+
+  // //  load time slot
+  const onChangeMachine = (e) => {
+
+    if (selectedDate && e?.id) {
+      const data = { date: selectedDate, machineId: e?.id }
+      getsServicesavailableFilterList(data).then((data) => {
+        data?.map((item) => {
+          setTimeSlots(item?.time)
+          console.log('date', item?.time)
+        })
+
+
+      })
+        .catch((error) => {
+          console.error("Error fetching lead data:", error);
+        });
+    }
+  }
 
   const [selectedSlots, setSelectedSlots] = useState([]);
 
@@ -221,7 +191,7 @@ const onChangeMachine  =(e)=>{
     const categoryName = e.target.value;
     setSelectedValue(categoryName)
     handleListSubCategory(id);
-    
+
   };
 
   useEffect(() => {
@@ -257,14 +227,14 @@ const onChangeMachine  =(e)=>{
     const id = selectedOption.getAttribute("id");
     const subcategoryName = e.target.value;
     console.log(id, subcategoryName, "sub-category-change");
-    const data = {subcategoryid: id}
+    const data = { subcategoryid: id }
     getServiceFilterList(data).then((data) => {
-  
-     setoptionmachine(data?.results)
+
+      setoptionmachine(data?.results)
     })
-    .catch((error) => {
-      console.error("Error fetching lead data:", error);
-    });
+      .catch((error) => {
+        console.error("Error fetching lead data:", error);
+      });
   };
 
   return (
@@ -274,44 +244,45 @@ const onChangeMachine  =(e)=>{
           <div className='col-lg-6'>
             <div class="card">
               <div class="card-body">
-                <div className='row'>
-                  <h2>Mark Availability</h2>
-                  <h3>Service Type</h3>
-                  <div className='col-lg-6'>
-                    <label className="form-label">Category :</label>
-                    <div className="status_dropdown">
-                      <select
-                        type="text"
-                        className="form-select mb-3 status_selector"
-                        value={selectedValue}
-                        onChange={handleCategoryChange}
-                      >
-                        <option value="" id={"0"}>Category</option>
-                        {categorylist &&
-                          categorylist.map((ele, i) => {
-                            return <option id={ele.id}>{ele.name}</option>;
-                          })}
-                      </select>
+                <form onSubmit={formik.handleSubmit}>
+                  <div className='row'>
+                    <h2>Mark Availability</h2>
+                    <h3>Service Type</h3>
+                    <div className='col-lg-6'>
+                      <label className="form-label">Category :</label>
+                      <div className="status_dropdown">
+                        <select
+                          type="text"
+                          className="form-select mb-3 status_selector"
+                          value={selectedValue}
+                          onChange={handleCategoryChange}
+                        >
+                          <option value="" id={"0"}>Category</option>
+                          {categorylist &&
+                            categorylist.map((ele, i) => {
+                              return <option id={ele.id}>{ele.name}</option>;
+                            })}
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                  <div className='col-lg-6'>
-                    <label className="form-label">Sub Category :</label>
-                    <div className="status_dropdown">
-                      <select
-                        type="text"
-                        className="form-select mb-3 status_selector"
-                        value={selectedValue}
-                        onChange={handleSubCategoryChange}
-                      >
-                        <option value="" id={"0"}>Sub Category</option>
-                        {subcategorylist &&
-                          subcategorylist.map((item, i) => {
-                            return <option id={item.id}>{item.name}</option>;
-                          })}
-                      </select>
+                    <div className='col-lg-6'>
+                      <label className="form-label">Sub Category :</label>
+                      <div className="status_dropdown">
+                        <select
+                          type="text"
+                          className="form-select mb-3 status_selector"
+                          value={selectedValue}
+                          onChange={handleSubCategoryChange}
+                        >
+                          <option value="" id={"0"}>Sub Category</option>
+                          {subcategorylist &&
+                            subcategorylist.map((item, i) => {
+                              return <option id={item.id}>{item.name}</option>;
+                            })}
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                  {/* <div className='col-lg-12'>
+                    {/* <div className='col-lg-12'>
                     {servicefilterlist?.map((data) =>
                       <label key={data.id} class="card mb-4" style={{ display: 'flex' }} onClick={() => setfilterid(data.id)}>
                         <input name="plan" class="radio" type="radio" checked={data.id === filterdataid} />
@@ -329,78 +300,92 @@ const onChangeMachine  =(e)=>{
                       </label>
                     )}
                   </div> */}
-                  <h2>Select Machine</h2>
-                  <Select
-                    // isMulti
-                    options={optionmachine}
-                    value={selectedOptions}
-                    onChange={onChangeMachine}
-                    getOptionLabel={(option) => (
-                   
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src={option.service_image[0]?.thumbnail} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
-                        <div>
+                    <h2>Select Machine</h2>
+                    <Select
+                      // isMulti
+                      options={optionmachine}
+                      value={selectedOptions}
+                      onChange={onChangeMachine}
+                      getOptionLabel={(option) => (
+
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <img src={option.service_image[0]?.thumbnail} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
                           <div>
-                            <strong>{option?.name}</strong>
-                          </div>
-                          <div style={{ fontSize: '12px', color: 'gray' }}>
-                            {option.sublabel} - {option.extraSublabel}
+                            <div>
+                              <strong>{option?.name}</strong>
+                            </div>
+                            <div style={{ fontSize: '12px', color: 'gray' }}>
+                              {option.sublabel} - {option.extraSublabel}
+                            </div>
                           </div>
                         </div>
+                      )}
+                      getOptionValue={(option) => option.value}
+                    />
+                    <label className="form-label">Calendar :</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      placeholder="Date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                    />
+                    <br></br>
+                    <h4>Time Slot</h4>
+                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                      {timeSlots?.map((slot, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            width: '120px',
+                            margin: '8px',
+                            cursor: 'pointer',
+                            backgroundColor: selectedSlots.includes(slot?.time) ? '#0A77FF' : 'white',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc',
+                            padding: '8px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                          }}
+                          onClick={() => handleSlotClick(slot?.time)}
+                        >
+                          <Typography variant="body2">
+                            {slot?.time}
+                          </Typography>
+                        </div>
+                      ))}
+                    </div>
+                    {/* <button type="button" class="btn btn-info btn-md btn-block" style={{ color: '#fff' }}>Mark As Available</button> */}
+                    <button
+                      className="btn btn-success"
+                      type="submit"
+                      style={{
+                        flex: 1,
+                        backgroundColor: "#006875",
+                        width: "92%",
+                        position: "absolute",
+                        bottom: "1rem",
+                      }}
+                    >
+                      {isLoading ? <CircularProgress /> : "Mark As Available"}
+                    </button>
+                    {selectedSlots.length > 0 && (
+                      <div>
+                        <p>You have selected the following time slots:</p>
+                        <ul>
+                          {selectedSlots.map((selected, index) => (
+                            <li key={index}>{selected}</li>
+                          ))}
+                        </ul>
                       </div>
                     )}
-                    getOptionValue={(option) => option.value}
-                  />
-                  <label className="form-label">Calendar :</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    placeholder="Date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                  />
-                  <br></br>
-                  <h4>Time Slot</h4>
-                  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {timeSlots?.map((slot, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          width: '120px',
-                          margin: '8px',
-                          cursor: 'pointer',
-                          backgroundColor: selectedSlots.includes(slot?.time) ? '#0A77FF' : 'white',
-                          borderRadius: '4px',
-                          border: '1px solid #ccc',
-                          padding: '8px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                        }}
-                        onClick={() => handleSlotClick(slot?.time)}
-                      >
-                        <Typography variant="body2">
-                          {slot?.time}
-                        </Typography>
-                      </div>
-                    ))}
                   </div>
-                  <button type="button" class="btn btn-info btn-md btn-block" style={{ color: '#fff' }}>Mark As Available</button>
-                  {selectedSlots.length > 0 && (
-                    <div>
-                      <p>You have selected the following time slots:</p>
-                      <ul>
-                        {selectedSlots.map((selected, index) => (
-                          <li key={index}>{selected}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
+                </form>
               </div>
             </div>
           </div>
-          <div className='col-lg-6'>
+          {/* <div className='col-lg-6'>
             <div class="card">
               <div class="card-body">
                 <div className='row'>
@@ -454,7 +439,7 @@ const onChangeMachine  =(e)=>{
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

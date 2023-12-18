@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import dashboardLogo from "../../assets/dashboard-logo.png"
 function SideBar() {
   return (
     <aside
@@ -18,7 +19,7 @@ function SideBar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <h1 className="navbar-brand navbar-brand-autodark">
-          <a href=".">Sea Arabia</a>
+          <a href="/dashboard"><img src={dashboardLogo}/></a>
         </h1>
         <div className="navbar-nav flex-row d-lg-none">
           <div className="nav-item d-none d-lg-flex me-3">

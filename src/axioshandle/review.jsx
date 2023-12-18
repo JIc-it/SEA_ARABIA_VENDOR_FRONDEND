@@ -1,6 +1,7 @@
 import axiosInstance from "./authHandle";
 const subcategoryidURl="main/subcategory-list"
 
+
 export const getCategoryist = () => {
   return axiosInstance
     .get("main/category-list")
@@ -54,6 +55,17 @@ export const subcategoryIdFilter = (id) => {
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching order request:", error);
+      throw error;
+    });
+};
+
+
+export const createAvailablityTime = (id) => {
+  return axiosInstance
+    .put(`service/service_availablitytime_update/${id}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while fetching lead request:", error);
       throw error;
     });
 };
