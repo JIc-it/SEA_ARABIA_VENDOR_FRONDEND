@@ -10,3 +10,11 @@ export function formatDate(date) {
   export const passwordRegex =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{5,}$/;
   
+    // export const formatDate = (value, format = 'DD MMM YYYY', res = '') => {
+    //   const d = moment(value).format(format)
+    //   if (d !== 'Invalid date') {
+    //     return d
+    //   } else {
+    //     return res
+    //   }
+    // }

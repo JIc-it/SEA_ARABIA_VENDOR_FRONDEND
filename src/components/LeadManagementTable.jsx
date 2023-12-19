@@ -1,12 +1,26 @@
 import { Link } from "react-router-dom";
 import AddNewLead from "./Modal/AddNewLead";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import '../static/css/Table.css'
-
+import { getbookingList } from "../axioshandle/leadMangement";
+const data=[
+  {
+    bookingId: 111,
+    name : 'firts'
+  },
+  {
+    bookingId: 111,
+    name : 'firts'
+  },
+  {
+    bookingId: 111,
+    name : 'firts'
+  }
+]
 function Table() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [selectedValue, setSelectedValue] = useState("New Lead");
-
+const[booking, setBooking] =useState([])
   const handleOpenOffcanvas = () => setShowOffcanvas(true);
 
   const handleCloseOffcanvas = () => setShowOffcanvas(false);
@@ -22,6 +36,17 @@ function Table() {
 
     return formatted_date;
   }
+  useEffect(() => {
+    getbookingList()
+      .then((data) => {
+        console.log('data', data)
+         setBooking(data?.results)
+
+      })
+      .catch((error) => {
+        console.error("Error fetching distributor data:", error);
+      });
+  }, []);
   return (
     <div>
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -116,27 +141,31 @@ function Table() {
         <div class="table-responsive custom-table-responsive">
           <table class="table custom-table">
             <tbody>
-              <tr scope="row">
+              {
+               booking?.map((item, index)=>{
+                  return(
+                    <>
+                     <tr scope="row">
                 <td>
                   <span className="table-head">Booking ID</span>
-                  <small class="d-block">#SS56DG2355D</small>
+                  <small class="d-block">{item?.booking_id}</small>
                 </td>
                 <td>
                   <span className="table-head"> Service</span>
 
-                  <small class="d-block">Jet ski</small>
+                  <small class="d-block">{item?.service?.name}</small>
                 </td>
                 <td>
-                  <span className="table-head"> Name</span>
-                  <small class="d-block">James Corden</small>
+                  <span className="table-head">Name</span>
+                  <small class="d-block">{item?.user?.first_name}</small>
                 </td>
                 <td>
                   <span className="table-head"> Booking Date</span>
-                  <small class="d-block">22 FEB 2023</small>
+                  <small class="d-block">{formatDate(item?.start_date)}</small>
                 </td>
                 <td>
                   <span className="table-head"> Created On</span>
-                  <small class="d-block">18 JAN 2023</small>
+                  <small class="d-block">{formatDate(item?.start_date)}</small>
                 </td>
                 <td>
                   <span className="table-head"> Price</span>
@@ -144,7 +173,7 @@ function Table() {
                 </td>
                 <td>
                   <span className="table-head"> Travellers</span>
-                  <small class="d-block">1</small>
+                  <small class="d-block">{item?.children},{item?.adults}</small>
                 </td>
                 <td>
                   <button type="button" class="btn btn-primary" style={{color:'#fff'}}>View
@@ -155,7 +184,12 @@ function Table() {
                 </td>
               </tr>
               <tr class="spacer"><td colspan="100"></td></tr>
-              <tr scope="row">
+                    </>
+                  )
+                })
+              }
+             
+              {/* <tr scope="row">
                 <td>
                   <span className="table-head">Booking ID</span>
                   <small class="d-block">#SS56DG2355D</small>
@@ -192,7 +226,7 @@ function Table() {
                     </svg>
                   </button>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
         </div>

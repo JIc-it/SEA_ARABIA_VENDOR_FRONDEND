@@ -59,6 +59,7 @@ let isRefreshing = false;
 axiosInstance.interceptors.request.use(async (config) => {
   if (config.url !== GENERATE_URL && localStorage.getItem("access_token")) {
     const accessToken = localStorage.getItem("access_token");
+   
     config.headers["Authorization"] = `Bearer ${accessToken}`;
   }
   return config;

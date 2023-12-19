@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import {getTotalBook, getbookingList} from "../../axioshandle/leadMangement"
+import {jwtDecode} from 'jwt-decode';
 
 const BookingView = () => {
     const [totalBooking, setTotalOrderBook] = useState(0);
@@ -17,18 +18,8 @@ const BookingView = () => {
     //         });
     // };
     // getbookingList
+  
 
-    useEffect(() => {
-        getbookingList()
-          .then((data) => {
-            console.log(data, 'databooking')
-            // setBookingData(data.total_booking);
-          })
-          .catch((error) => {
-            console.error("Error fetching distributor data:", error);
-          });
-      }, []);
-      
     useEffect(() => {
         getTotalBook()
           .then((data) => {

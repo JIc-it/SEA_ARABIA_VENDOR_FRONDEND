@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import axiosInstance from "./authHandle";
 const bookinglistIdURl="booking/bookings/"
 
@@ -12,6 +13,8 @@ export const getVendorList = () => {
 };
 
 export const getTotalBook = () => {
+
+
   return axiosInstance
     .get("booking/booking-count")
     .then((response) => response.data)
@@ -21,9 +24,14 @@ export const getTotalBook = () => {
     });
 };
 
-export const getbookingList = (id) => {
+
+
+export const getbookingList = () => {
+  const accessToken = localStorage.getItem("access_token");
+  const decoded = jwtDecode(accessToken);
+  console.log(decoded)
   return axiosInstance
-    .get(`${bookinglistIdURl}`,{params:{vendor:id}})
+    .get(`${bookinglistIdURl}`,{params:{vendor:decoded?.user_id}})
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching Booking List:", error);
