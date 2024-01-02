@@ -309,13 +309,14 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                       getOptionLabel={(option) => (
 
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <img src={option.service_image[0]?.thumbnail} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
+                          <img src={option.service_image[0]?.image} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
                           <div>
                             <div>
                               <strong>{option?.name}</strong>
                             </div>
                             <div style={{ fontSize: '12px', color: 'gray' }}>
-                              {option.sublabel} - {option.extraSublabel}
+                              {option?.category[0]?.name} 
+                              {/* - {option.extraSublabel} */}
                             </div>
                           </div>
                         </div>

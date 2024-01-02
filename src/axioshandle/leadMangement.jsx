@@ -13,8 +13,6 @@ export const getVendorList = () => {
 };
 
 export const getTotalBook = () => {
-
-
   return axiosInstance
     .get("booking/booking-count")
     .then((response) => response.data)

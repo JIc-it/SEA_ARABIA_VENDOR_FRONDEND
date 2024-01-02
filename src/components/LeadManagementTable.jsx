@@ -49,7 +49,7 @@ const[booking, setBooking] =useState([])
   }, []);
   return (
     <div>
-      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      {/* <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">All</button>
         </li>
@@ -62,13 +62,13 @@ const[booking, setBooking] =useState([])
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Cancelled</button>
         </li>
-      </ul>
+      </ul> 
       <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">All</div>
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">Confirm</div>
         <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">Complete</div>
         <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">...</div>
-      </div>
+      </div>*/}
       <AddNewLead show={showOffcanvas} close={handleCloseOffcanvas} />
       <div className="col-12 actions_menu">
         <div className="action_menu_left col-5">
@@ -93,7 +93,6 @@ const[booking, setBooking] =useState([])
                     <path d="M21 21l-6 -6" />
                   </svg>
                 </span>
-
                 <input
                   type="text"
                   className="form-control"
