@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,20 +16,18 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
-import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
-import LoginImageContainer from "./LoginImageContainer";
 import CopyWrite from "./CopyWrite";
-import { loginRequest } from '../../axioshandle/authHandle'
 import { passwordRegex } from "../../helpers";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LoginImageContainer from "./LoginImageContainer";
+import { useNavigate } from "react-router";
+import { loginRequest } from '../../axioshandle/authHandle'
+import { toast } from "react-toastify";
+
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const [capsLockOn, setCapsLockOn] = useState(false);
-
 
   const formik = useFormik({
     initialValues: {
@@ -44,10 +43,6 @@ const Login = () => {
       password: Yup.string()
         .max(50)
         .required("Password is required")
-        .matches(
-          passwordRegex,
-          "Password must contain at least 5 characters, at least one uppercase letter, lowercase letter, special character, and number"
-        ),
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -73,8 +68,6 @@ const Login = () => {
       }
     },
   });
-
-
   return (
     <div
       className="contaier-fluid"
@@ -147,31 +140,22 @@ const Login = () => {
                     />
                     <Typography variant="span">Password</Typography>
                     <TextField
-                      autoComplete="off"
+                      autocomplete="off"
                       size="small"
+                      error={
+                        !!(formik.touched.password && formik.errors.password)
+                      }
                       fullWidth
+                      helperText={
+                        formik.touched.password && formik.errors.password
+                      }
                       placeholder="Password"
                       name="password"
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
-                      type={showPassword ? "text" : "password"}
+                      type={"password"}
                       value={formik.values.password}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                              edge="end"
-                            >
-                              {showPassword ? (
-                                <VisibilityIcon />
-                              ) : (
-                                <VisibilityOffIcon />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
+                      inputProps={{ maxLength: 50 }}
                     />
                   </Stack>
 
@@ -188,7 +172,7 @@ const Login = () => {
                     type="submit"
                     variant="contained"
                     style={{
-                      borderRadius: "var(--roundness-round-inside, 6px)",
+                      borderRadius: " var(--roundness-round-inside, 6px)",
                       background: "#006875",
 
                       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
@@ -197,6 +181,7 @@ const Login = () => {
                   >
                     Sign In
                   </Button>
+                  <br />
                   <Typography
                     color="text.secondary"
                     variant="body2"
@@ -204,7 +189,7 @@ const Login = () => {
                   >
                     <Link
                       // component={NextLink}
-                      href="/email-varification"
+                      href="/email-verification"
                       underline="hover"
                       variant="subtitle2"
                       style={{ color: "#187AF7" }}
