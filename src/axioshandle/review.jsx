@@ -32,6 +32,16 @@ export const createAvailablityTime = (id) => {
     });
 };
 
+export const createAvailablity = (data) => {
+  return axiosInstance
+      .post("service/availability-create/", data)
+      .then((response) => response.data)
+      .catch((error) => {
+          console.error("Error while login:", error);
+          throw error;
+      });
+};
+
 // New Api collection 
 
 export const getCompanyList = () => {

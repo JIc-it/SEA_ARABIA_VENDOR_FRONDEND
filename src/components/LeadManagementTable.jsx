@@ -3,24 +3,24 @@ import AddNewLead from "./Modal/AddNewLead";
 import { useEffect, useState } from "react";
 import '../static/css/Table.css'
 import { getbookingList } from "../axioshandle/leadMangement";
-const data=[
+const data = [
   {
     bookingId: 111,
-    name : 'firts'
+    name: 'firts'
   },
   {
     bookingId: 111,
-    name : 'firts'
+    name: 'firts'
   },
   {
     bookingId: 111,
-    name : 'firts'
+    name: 'firts'
   }
 ]
 function Table() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [selectedValue, setSelectedValue] = useState("New Lead");
-const[booking, setBooking] =useState([])
+  const [booking, setBooking] = useState([])
   const handleOpenOffcanvas = () => setShowOffcanvas(true);
 
   const handleCloseOffcanvas = () => setShowOffcanvas(false);
@@ -36,39 +36,57 @@ const[booking, setBooking] =useState([])
 
     return formatted_date;
   }
+  const [filteredBookings, setFilteredBookings] = useState([]);
   useEffect(() => {
     getbookingList()
       .then((data) => {
         console.log('data', data)
-         setBooking(data?.results)
-
+        setBooking(data?.results);
+        setFilteredBookings(data?.results); // Initialize with all bookings
       })
       .catch((error) => {
         console.error("Error fetching distributor data:", error);
       });
   }, []);
+
+  const filterBookings = (status) => {
+    if (status === 'All') {
+      setFilteredBookings(booking);
+    } else {
+      const filtered = booking.filter((item) => item.status === status);
+      setFilteredBookings(filtered);
+    }
+  };
   return (
     <div>
-      {/* <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">All</button>
+          <button class="nav-link active" onClick={() => filterBookings('All')} id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">All</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Confirmed</button>
+          <button class="nav-link" onClick={() => filterBookings('Confirmed')} id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Confirmed</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Completed</button>
+          <button class="nav-link" onClick={() => filterBookings('Completed')} id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Completed</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Cancelled</button>
+          <button class="nav-link" onClick={() => filterBookings('Cancelled')} id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Cancelled</button>
         </li>
-      </ul> 
-      <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">All</div>
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">Confirm</div>
-        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">Complete</div>
-        <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">...</div>
-      </div>*/}
+      </ul>
+      {/* <div className="tab-content" id="pills-tabContent">
+        <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabIndex="0">
+          <button onClick={() => filterBookings('All')} className="btn btn-link">Show All Bookings</button>
+        </div>
+        <div className="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabIndex="0">
+          <button onClick={() => filterBookings('Confirmed')} className="btn btn-link">Show Confirmed Bookings</button>
+        </div>
+        <div className="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabIndex="0">
+          <button onClick={() => filterBookings('Completed')} className="btn btn-link">Show Completed Bookings</button>
+        </div>
+        <div className="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabIndex="0">
+          <button onClick={() => filterBookings('Cancelled')} className="btn btn-link">Show Cancelled Bookings</button>
+        </div>
+      </div> */}
       <AddNewLead show={showOffcanvas} close={handleCloseOffcanvas} />
       <div className="col-12 actions_menu">
         <div className="action_menu_left col-5">
@@ -140,54 +158,53 @@ const[booking, setBooking] =useState([])
         <div class="table-responsive custom-table-responsive">
           <table class="table custom-table">
             <tbody>
-              {
-               booking?.map((item, index)=>{
-                  return(
+            {filteredBookings.map((item, index) => {
+                  return (
                     <>
-                     <tr scope="row">
-                <td>
-                  <span className="table-head">Booking ID</span>
-                  <small class="d-block">{item?.booking_id}</small>
-                </td>
-                <td>
-                  <span className="table-head"> Service</span>
+                      <tr scope="row">
+                        <td>
+                          <span className="table-head">Booking ID</span>
+                          <small class="d-block">{item?.booking_id}</small>
+                        </td>
+                        <td>
+                          <span className="table-head"> Service</span>
 
-                  <small class="d-block">{item?.service?.name}</small>
-                </td>
-                <td>
-                  <span className="table-head">Name</span>
-                  <small class="d-block">{item?.user?.first_name}</small>
-                </td>
-                <td>
-                  <span className="table-head"> Booking Date</span>
-                  <small class="d-block">{formatDate(item?.start_date)}</small>
-                </td>
-                <td>
-                  <span className="table-head"> Created On</span>
-                  <small class="d-block">{formatDate(item?.start_date)}</small>
-                </td>
-                <td>
-                  <span className="table-head"> Price</span>
-                  <small class="d-block">$ 13,000</small>
-                </td>
-                <td>
-                  <span className="table-head"> Travellers</span>
-                  <small class="d-block">{item?.children},{item?.adults}</small>
-                </td>
-                <td>
-                  <button type="button" class="btn btn-primary" style={{color:'#fff'}}>View
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-              <tr class="spacer"><td colspan="100"></td></tr>
+                          <small class="d-block">{item?.service}</small>
+                        </td>
+                        <td>
+                          <span className="table-head">Name</span>
+                          <small class="d-block">{item?.first_name} {item?.last_name}</small>
+                        </td>
+                        <td>
+                          <span className="table-head"> Booking Date</span>
+                          <small class="d-block">{formatDate(item?.start_date)}</small>
+                        </td>
+                        <td>
+                          <span className="table-head"> Created On</span>
+                          <small class="d-block">{formatDate(item?.start_date)}</small>
+                        </td>
+                        <td>
+                          <span className="table-head"> Price</span>
+                          <small class="d-block">$ 13,000</small>
+                        </td>
+                        <td>
+                          <span className="table-head"> Travellers</span>
+                          <small class="d-block">{item?.number_of_people}</small>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-primary" style={{ color: '#fff' }}>View
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr class="spacer"><td colspan="100"></td></tr>
                     </>
                   )
                 })
               }
-             
+
               {/* <tr scope="row">
                 <td>
                   <span className="table-head">Booking ID</span>

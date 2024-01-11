@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import axiosInstance from "./authHandle";
-const bookinglistIdURl="booking/bookings/"
+// const bookinglistIdURl="booking/vendor-booking-count"
 
 export const getVendorList = () => {
   return axiosInstance
@@ -14,7 +14,7 @@ export const getVendorList = () => {
 
 export const getTotalBook = () => {
   return axiosInstance
-    .get("booking/booking-count")
+    .get("booking/vendor/count")
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching lead request:", error);
@@ -29,10 +29,22 @@ export const getbookingList = () => {
   const decoded = jwtDecode(accessToken);
   console.log(decoded)
   return axiosInstance
-    .get(`${bookinglistIdURl}`,{params:{vendor:decoded?.user_id}})
+    // .get(`${bookinglistIdURl}`,{params:{vendor:decoded?.user_id}})
+    .get("booking/bookings/vendor/")
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching Booking List:", error);
       throw error;
     });
+};
+
+
+export const createAvailablity = (data) => {
+  return axiosInstance
+      .post("service/availability-create/", data)
+      .then((response) => response.data)
+      .catch((error) => {
+          console.error("Error while login:", error);
+          throw error;
+      });
 };
