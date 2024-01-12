@@ -37,11 +37,12 @@ function Table() {
     return formatted_date;
   }
   const [filteredBookings, setFilteredBookings] = useState([]);
+
   useEffect(() => {
     getbookingList()
       .then((data) => {
         console.log('data', data)
-        setBooking(data?.results);
+        setBooking(data);
         setFilteredBookings(data?.results); // Initialize with all bookings
       })
       .catch((error) => {

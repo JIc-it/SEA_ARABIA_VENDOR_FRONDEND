@@ -499,8 +499,10 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
     categoryid: "",
     subcategoryid: ""
   })
-
+console.log('CATEGORY', categorylist)
   // //  load time slot
+
+  // machine onchange handler 
   const onChangeMachine = (e) => {
 
     if (selectedDate && e?.id) {
@@ -519,9 +521,9 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
         });
     }
   }
-
+// slot state
   const [selectedSlots, setSelectedSlots] = useState([]);
-
+// slot handler 
   const handleSlotClick = (slot) => {
     if (selectedSlots.includes(slot)) {
       // If the slot is already selected, remove it
@@ -580,16 +582,18 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
     setSelectedValue(event.target.value);
   };
 
+// get subcategory with castegory id
   const handleListSubCategory = (id) => {
     subcategoryIdFilter(id)
       .then((data) => {
-        setSubCategorylist(data.results);
+        setSubCategorylist(data);
       })
       .catch((error) => {
         console.error("Error fetching lead data:", error);
       });
   };
 
+// onchanger handler category
   const handleCategoryChange = (e) => {
     const selectedOption = e.target.options[e.target.selectedIndex];
     const id = selectedOption.getAttribute("id");
@@ -599,53 +603,57 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
 
   };
 
+// get category list
   useEffect(() => {
     getCategoryist()
       .then((data) => {
-        setCategorylist(data.results);
+        console.log('DATA', data)
+        setCategorylist(data);
       })
       .catch((error) => {
         console.error("Error fetching Category data:", error);
       });
-    getSubCategoryist()
-      .then((data) => {
-        setSubCategorylist(data.results);
-      })
-      .catch((error) => {
-        console.error("Error fetching Sub Category data:", error);
-      });
+    // getSubCategoryist()
+    //   .then((data) => {
+    //     setSubCategorylist(data.results);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching Sub Category data:", error);
+    //   });
   }, []);
-
+// service filter api
   useEffect(() => {
     getServiceFilterList(filtering)
       .then((data) => {
         console.log(data);
-        setserviceFilterList(data.results);
+        setserviceFilterList(data);
       })
       .catch((error) => {
         console.error("Error fetching Service Filter List data:", error);
       });
   }, [filtering]);
 
+// subcategory onchange handler
   const handleSubCategoryChange = (e) => {
     const selectedOption = e.target.options[e.target.selectedIndex];
     const id = selectedOption.getAttribute("id");
     const subcategoryName = e.target.value;
     console.log(id, subcategoryName, "sub-category-change");
     const data = { subcategoryid: id }
+    // service filter with subcategory id
     getServiceFilterList(data).then((data) => {
 
-      setoptionmachine(data?.results)
+      setoptionmachine(data)
     })
       .catch((error) => {
         console.error("Error fetching lead data:", error);
       });
   };
 
-  const onsubmit = () => {
-    console.log('datata', machineId, selectedValue)
+  // const onsubmit = () => {
+  //   console.log('datata', machineId, selectedValue)
 
-  }
+  // }
 
 
 
@@ -708,7 +716,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           <option value="" id={"0"}>Category</option>
                           {categorylist &&
                             categorylist.map((ele, i) => {
-                              return <option id={ele.id}>{ele.name}</option>;
+                            return <option id={ele.id}>{ele.name}</option>;
                             })}
                         </select>
                       </div>
@@ -744,10 +752,10 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                             <div>
                               <strong>{option?.name}</strong>
                             </div>
-                            <div style={{ fontSize: '12px', color: 'gray' }}>
-                              {option?.category[0]?.name}
-                              {/* - {option.extraSublabel} */}
-                            </div>
+                            // <div style={{ fontSize: '12px', color: 'gray' }}>
+                            //   {option?.category[0]?.name}
+                            //   {/* - {option.extraSublabel} */}
+                            // </div>
                           </div>
                         </div>
                       )}

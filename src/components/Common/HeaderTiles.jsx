@@ -7,46 +7,57 @@ function HeaderTiles(props) {
   const [totayBooking, settotayOrderBook] = useState(0);
   const [confirmBooking, setConfirmOrderBook] = useState(0);
   const [cancelBooking, setCencelOrderBook] = useState(0);
-
-  useEffect(() => {
+ useEffect(() => {
     getTotalBook()
       .then((data) => {
-        setTotalOrderBook(data.total_booking);
+        console.log('data', data)
+        setTotalOrderBook(data)
+        // setBooking(data?.results);
+        // setFilteredBookings(data?.results); // Initialize with all bookings
       })
       .catch((error) => {
-        console.error("Error fetching total booking data:", error);
+        console.error("Error fetching distributor data:", error);
       });
   }, []);
+  // useEffect(() => {
+  //   getTotalBook()
+  //     .then((data) => {
+  //       setTotalOrderBook(data.total_booking);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching total booking data:", error);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    getTotalBook()
-      .then((data) => {
-        settotayOrderBook(data.today_booking);
-      })
-      .catch((error) => {
-        console.error("Error fetching today booking data:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   getTotalBook()
+  //     .then((data) => {
+  //       settotayOrderBook(data.today_booking);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching today booking data:", error);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    getTotalBook()
-      .then((data) => {
-        setConfirmOrderBook(data.total_confirmed_booking);
-      })
-      .catch((error) => {
-        console.error("Error fetching confirmed booking data:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   getTotalBook()
+  //     .then((data) => {
+  //       setConfirmOrderBook(data.total_confirmed_booking);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching confirmed booking data:", error);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    getTotalBook()
-      .then((data) => {
-        setCencelOrderBook(data.total_cancelled_booking);
-      })
-      .catch((error) => {
-        console.error("Error fetching cancelled booking data:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   getTotalBook()
+  //     .then((data) => {
+  //       setCencelOrderBook(data.total_cancelled_booking);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching cancelled booking data:", error);
+  //     });
+  // }, []);
   return (
     <div className="row row-cards">
       <div className="col-sm-6 col-lg-3">
@@ -86,7 +97,7 @@ function HeaderTiles(props) {
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  {totalBooking}
+                  {totalBooking?.total_booking}
                 </div>
               </div>
             </div>
@@ -131,9 +142,10 @@ function HeaderTiles(props) {
                 <div
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
-                >
-                  {totayBooking}
-                </div>
+                  >
+                {totalBooking?.today_booking}
+              </div>
+
               </div>
             </div>
           </div>
@@ -178,7 +190,7 @@ function HeaderTiles(props) {
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  {confirmBooking}
+                  {totalBooking?.total_confirmed_booking}
                 </div>
               </div>
             </div>
@@ -224,7 +236,7 @@ function HeaderTiles(props) {
                   className="text-secondary"
                   style={{ fontSize: "18px", fontWeight: "700" }}
                 >
-                  {cancelBooking}
+                  {totalBooking?.total_cancelled_booking}
                 </div>
               </div>
             </div>
