@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useSpring, animated } from 'react-spring';
 import { useFormik } from "formik";
+import { format, parse } from 'date-fns'
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -19,6 +20,7 @@ import {
   getsServicesavailableFilterList,
   createAvailablityTime
 } from "../../axioshandle/review"
+import { formatDate, formatDates } from '../../helpers';
 const cards = [
   { id: 1, day: 'Mon', date: 1, month: 'Jan' },
   { id: 2, day: 'Tue', date: 2, month: 'Jan' },
@@ -44,10 +46,10 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
     categoryid: "",
     subcategoryid: ""
   })
-  console.log('CATEGORY', categorylist)
-  // //  load time slot
+  // console.log('CATEGORY', categorylist)
+  // // //  load time slot
 
-  // machine onchange handler 
+  // // machine onchange handler 
   // const onChangeMachine = (e) => {
 
   //   if (selectedDate && e?.id) {
@@ -81,10 +83,9 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
 
       getsServicesavailableFilterList(data)
         .then((data) => {
-          data?.map((item) => {
-            setTimeSlots(item?.time);
-            console.log('date', item?.time);
-          });
+       
+          setTimeSlots(data?.time);
+         
         })
         .catch((error) => {
           console.error("Error fetching lead data:", error);
@@ -228,18 +229,25 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
     onSubmit: async (values) => {
 
       console.log('data', machineId, selectedDate, selectedSlots)
+    
       setIsLoading(true);
       if (!isLoading) {
-        const newArray = selectedSlots.map((value) => ({
-          time: value, make_slot_available: true
-        }))
+        // const newArray = selectedSlots.map((value) => ({
+        //   time: value, make_slot_available: true
+        // }))
+        //
+        const [year,month,day] = selectedDate.split('-');
 
+        // Create the reversed date string
+        const reversedDate = `${day}-${month}-${year}`;
         const data = {
           service: machineId,
-          date: selectedDate,
-          time: newArray
+          date: reversedDate,
+          time: selectedSlots,
+          update_type: 'date'
+          
         }
-        console.log('slotjdfkdsfkf', newArray)
+       console.log('submit', data)
         const adminData = await createAvailablity(data);
         if (adminData) {
           setIsRefetch(!isRefetch);
@@ -252,6 +260,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
         }
 
       }
+      setIsLoading(false);
     },
   });
 
@@ -327,6 +336,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                     <label className="form-label">Calendar :</label>
                     <input
                       type="date"
+                  
                       className="form-control"
                       placeholder="Date"
                       value={selectedDate}

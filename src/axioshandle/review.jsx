@@ -33,13 +33,17 @@ export const createAvailablityTime = (id) => {
 };
 
 export const createAvailablity = (data) => {
-  return axiosInstance
-      .post("service/availability-create/", data)
-      .then((response) => response.data)
-      .catch((error) => {
-          console.error("Error while login:", error);
-          throw error;
-      });
+  console.log('datakl;kl;klkl;', data)
+  if(data){
+    return axiosInstance
+    .patch(`service/update-availability/${data.service}/${data.date}/`, data)
+    .then((response) => response.data)
+    .catch((error) => {
+        console.error("Error while login:", error);
+        throw error;
+    });
+  }
+  
 };
 
 // New Api collection 

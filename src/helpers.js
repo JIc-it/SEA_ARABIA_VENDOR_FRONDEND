@@ -1,3 +1,5 @@
+
+import moment from "moment";
 export function formatDate(date) {
     const created_at_str = date;
     const created_at_date = new Date(created_at_str);
@@ -6,15 +8,15 @@ export function formatDate(date) {
   
     return formatted_date;
   }
-  
+
   export const passwordRegex =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{5,}$/;
   
-    // export const formatDate = (value, format = 'DD MMM YYYY', res = '') => {
-    //   const d = moment(value).format(format)
-    //   if (d !== 'Invalid date') {
-    //     return d
-    //   } else {
-    //     return res
-    //   }
-    // }
+    export const formatDates = (value, format = 'DD MMM YYYY', res = '') => {
+      const d = moment(value).format(format)
+      if (d !== 'Invalid date') {
+        return d
+      } else {
+        return res
+      }
+    }
