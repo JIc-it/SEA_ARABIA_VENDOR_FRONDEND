@@ -1,13 +1,16 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import {getTotalBook, getbookingList} from "../../axioshandle/leadMangement"
-import {jwtDecode} from 'jwt-decode';
+import { getTotalBook, getbookingList, getBooking } from "../../axioshandle/leadMangement"
+import { jwtDecode } from 'jwt-decode';
+import { useParams } from 'react-router-dom';
 
 const BookingView = () => {
+    const params = useParams();
+
     const [totalBooking, setTotalOrderBook] = useState(0);
     const [BookingData, setBookingData] = useState('');
-
-    
+    const [isLoading, setIsLoading] = useState(false)
+    const [booking, setBooking] = useState({})
     // const handleListSubCategory = (id) => {
     //     subcategoryIdFilter(id)
     //         .then((data) => {
@@ -18,17 +21,30 @@ const BookingView = () => {
     //         });
     // };
     // getbookingList
-  
 
     useEffect(() => {
+        setIsLoading(true);
+        getBooking(params.id)
+            .then((data) => {
+                setIsLoading(false);
+                setBooking(data);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.error("Error fetching  data:", error);
+            });
+    }, [params.id]);
+
+    console.log(booking, "one");
+    useEffect(() => {
         getTotalBook()
-          .then((data) => {
-            setTotalOrderBook(data.total_booking);
-          })
-          .catch((error) => {
-            console.error("Error fetching distributor data:", error);
-          });
-      }, []);
+            .then((data) => {
+                setTotalOrderBook(data.total_booking);
+            })
+            .catch((error) => {
+                console.error("Error fetching distributor data:", error);
+            });
+    }, []);
 
     return (
         <div className="page" style={{ top: 20 }}>
@@ -48,9 +64,11 @@ const BookingView = () => {
                                 <div style={{ color: '#08A747', fontsize: '20px', fontfamily: 'Roboto', fontWeight: '600', textTransform: 'capitalize', lineHeight: '32px', wordWrap: 'break-word' }}>Booking Confirmed</div>
                             </div>
                             <div style={{ alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', gap: '20px', display: 'inline-flex' }}>
-                                <div className='payment-details'>
+                                <div className='payment-details' onClick={() => {
+                                    window.location.href = `tel:${booking?.mobile}`;
+                                }}>
                                     <div className='vender-txt'>Call Vendor</div>
-                                    <div style={{ width: '20px', height: '20px', position: 'relative' }}>
+                                    <div style={{ width: '20px', height: '20px', position: 'relative'}}>
                                         {/* <div style={{ width: '15px', height: '15px', left: '2.50px', top: '2.50px', position: 'absolute', background: "#fff" }}></div>
                                         <div style={{ width: '7.91px', height: '7.92px', left: '11.04px', top: '1.04px', position: 'absolute', background: "#fff" }}></div> */}
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,11 +95,11 @@ const BookingView = () => {
                             <div style={{ alignSelf: 'stretch', height: '96px', padding: '16px', background: '#F8F8F8', borderRadius: '6px', flexDirection: 'column', justifyContent: 'flexstart', alignItems: 'flex-start', gap: '12px', display: 'flex' }}>
                                 <div style={{ alignSelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
                                     <div style={{ color: "#68727D", fontsize: '16px', fontfamily: 'Roboto', fontWeight: '500', lineHeight: '24px', wordWrap: 'break-word' }}>Customer</div>
-                                    <div style={{ color: '#252525', fontsize: '18px', fontfamily: 'Roboto', fontWeight: '400', lineHeight: '26px', wordWrap: 'break-word' }}>James Corden</div>
+                                    <div style={{ color: '#252525', fontsize: '18px', fontfamily: 'Roboto', fontWeight: '400', lineHeight: '26px', wordWrap: 'break-word' }}>{booking.first_name} {booking.last_name}</div>
                                 </div>
                                 <div style={{ alignSelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', display: 'inline-flex' }}>
                                     <div style={{ color: "#68727D", fontsize: '16px', fontfamily: 'Roboto', fontWeight: '500', lineHeight: '24px', wordWrap: 'break-word' }}>Email</div>
-                                    <div style={{ color: '#252525', fontsize: '18px', fontfamily: 'Roboto', fontWeight: '400', lineHeight: '26px', wordWrap: 'break-word' }}>jamescorden123@gmail.com</div>
+                                    <div style={{ color: '#252525', fontsize: '18px', fontfamily: 'Roboto', fontWeight: '400', lineHeight: '26px', wordWrap: 'break-word' }}>{booking?.email}</div>
                                 </div>
                             </div>
                         </div>
@@ -94,15 +112,15 @@ const BookingView = () => {
                                 <div className='w-33'>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Booking ID</p>
-                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>SS56DG2355D</p>
+                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>{booking?.booking_id}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>End Date</p>
-                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>18 JAN 2021 &nbsp;09:00 AM</p>
+                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>{booking?.end_date}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Travellers</p>
-                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>3</p>
+                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>{booking?.number_of_people}</p>
                                     </div>
                                 </div>
                                 <div className='w-33'>
@@ -112,7 +130,7 @@ const BookingView = () => {
                                     </div>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Starting Point</p>
-                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>Marina Crescent</p>
+                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>{booking?.starting_point}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Is Insured</p>
@@ -122,11 +140,11 @@ const BookingView = () => {
                                 <div className='w-33'>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Start Date</p>
-                                        <p style={{ fontWeight: "500", fontSize: "18px", color: "#006875" }}>18 JAN 2021 &nbsp;10:00 AM</p>
+                                        <p style={{ fontWeight: "500", fontSize: "18px", color: "#006875" }}>{booking?.start_date}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Destination</p>
-                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>Kuwait Bay</p>
+                                        <p style={{ fontWeight: "500", fontSize: "18px" }}>{booking?.destination}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#68727D", fontSize: "16px" }}>Insurance ID</p>
@@ -283,7 +301,7 @@ const BookingView = () => {
                                 <div className='d-flex'>
                                     <div className='w-100'>
                                         <div style={{ backgroundColor: '#F8F8F8', padding: 10 }}>
-                                            <span className='payment-txt' style={{color: '#000'}}>Traveller :</span>
+                                            <span className='payment-txt' style={{ color: '#000' }}>Traveller :</span>
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>
                                                 <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3332 12.9997C15.7273 12.9997 17.6665 11.0605 17.6665 8.66634C17.6665 6.27217 15.7273 4.33301 13.3332 4.33301C10.939 4.33301 8.99984 6.27217 8.99984 8.66634C8.99984 11.0605 10.939 12.9997 13.3332 12.9997ZM13.3332 15.1663C10.4407 15.1663 4.6665 16.618 4.6665 19.4997V20.583C4.6665 21.1788 5.154 21.6663 5.74984 21.6663H20.9165C21.5123 21.6663 21.9998 21.1788 21.9998 20.583V19.4997C21.9998 16.618 16.2257 15.1663 13.3332 15.1663Z" fill="#252525" />
@@ -307,7 +325,7 @@ const BookingView = () => {
                                 <div className='d-flex'>
                                     <div className='w-100'>
                                         <div style={{ backgroundColor: '#F8F8F8', padding: 10 }}>
-                                            <span className='payment-txt' style={{color: '#000'}}>Traveller :</span>
+                                            <span className='payment-txt' style={{ color: '#000' }}>Traveller :</span>
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>
                                                 <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3332 12.9997C15.7273 12.9997 17.6665 11.0605 17.6665 8.66634C17.6665 6.27217 15.7273 4.33301 13.3332 4.33301C10.939 4.33301 8.99984 6.27217 8.99984 8.66634C8.99984 11.0605 10.939 12.9997 13.3332 12.9997ZM13.3332 15.1663C10.4407 15.1663 4.6665 16.618 4.6665 19.4997V20.583C4.6665 21.1788 5.154 21.6663 5.74984 21.6663H20.9165C21.5123 21.6663 21.9998 21.1788 21.9998 20.583V19.4997C21.9998 16.618 16.2257 15.1663 13.3332 15.1663Z" fill="#252525" />
@@ -331,7 +349,7 @@ const BookingView = () => {
                                 <div className='d-flex'>
                                     <div className='w-100'>
                                         <div style={{ backgroundColor: '#F8F8F8', padding: 10 }}>
-                                            <span className='payment-txt' style={{color: '#000'}}>Traveller :</span>
+                                            <span className='payment-txt' style={{ color: '#000' }}>Traveller :</span>
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>
                                                 <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3332 12.9997C15.7273 12.9997 17.6665 11.0605 17.6665 8.66634C17.6665 6.27217 15.7273 4.33301 13.3332 4.33301C10.939 4.33301 8.99984 6.27217 8.99984 8.66634C8.99984 11.0605 10.939 12.9997 13.3332 12.9997ZM13.3332 15.1663C10.4407 15.1663 4.6665 16.618 4.6665 19.4997V20.583C4.6665 21.1788 5.154 21.6663 5.74984 21.6663H20.9165C21.5123 21.6663 21.9998 21.1788 21.9998 20.583V19.4997C21.9998 16.618 16.2257 15.1663 13.3332 15.1663Z" fill="#252525" />

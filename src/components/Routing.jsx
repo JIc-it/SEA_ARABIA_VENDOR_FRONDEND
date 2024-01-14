@@ -19,6 +19,7 @@ function AllRouting() {
         <Route path="/review" element={<Review />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/booking-view" element={<BookingView />} />
+        <Route path="/booking-view/:id" element={<BookingView />} />
         <Route path="/login" element={<Login />} />
       </Routes>
   );

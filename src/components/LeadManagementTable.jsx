@@ -18,6 +18,7 @@ const data = [
   }
 ]
 function Table() {
+  const [order_data, setOrderData] = useState([]);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [selectedValue, setSelectedValue] = useState("New Lead");
   const [booking, setBooking] = useState([])
@@ -38,12 +39,25 @@ function Table() {
   }
   const [filteredBookings, setFilteredBookings] = useState([]);
 
+  // useEffect(() => {
+  //   getbookingList()
+  //     .then((data) => {
+  //       console.log('data', data)
+  //       setBooking(data?.results);
+  //       setFilteredBookings(data?.results);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching distributor data:", error);
+  //     });
+  // }, []);
+
   useEffect(() => {
     getbookingList()
       .then((data) => {
-        console.log('data', data)
-        setBooking(data);
+        console.log('data', data);
+        setBooking(data?.results);
         setFilteredBookings(data?.results); // Initialize with all bookings
+        setOrderData(data?.results); // Set order_data with the fetched data
       })
       .catch((error) => {
         console.error("Error fetching distributor data:", error);
@@ -56,6 +70,47 @@ function Table() {
     } else {
       const filtered = booking.filter((item) => item.status === status);
       setFilteredBookings(filtered);
+    }
+  };
+
+  const exportToCSV = () => {
+    if (order_data) {
+      const header = [
+        "Booking ID",
+        "Service",
+        "Name",
+        "Booking Date",
+        "Created On",
+        "Price",
+        "Travellers",
+      ];
+
+      const csvData = order_data.map((rr_data) => {
+        const date = new Date(rr_data.start_date);
+        const formattedDate = date.toLocaleDateString();
+
+        return [
+          rr_data?.booking_id,
+          rr_data.service,
+          `${rr_data.first_name} ${rr_data.last_name}`,
+          formattedDate,
+          formattedDate,
+          rr_data.price,
+          rr_data.number_of_people,
+        ];
+      });
+
+      const csvContent = [header, ...csvData]
+        .map((row) => row.join(","))
+        .join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Order_Requests.csv";
+      a.click();
+      window.URL.revokeObjectURL(url);
     }
   };
   return (
@@ -74,20 +129,6 @@ function Table() {
           <button class="nav-link" onClick={() => filterBookings('Cancelled')} id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Cancelled</button>
         </li>
       </ul>
-      {/* <div className="tab-content" id="pills-tabContent">
-        <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabIndex="0">
-          <button onClick={() => filterBookings('All')} className="btn btn-link">Show All Bookings</button>
-        </div>
-        <div className="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabIndex="0">
-          <button onClick={() => filterBookings('Confirmed')} className="btn btn-link">Show Confirmed Bookings</button>
-        </div>
-        <div className="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabIndex="0">
-          <button onClick={() => filterBookings('Completed')} className="btn btn-link">Show Completed Bookings</button>
-        </div>
-        <div className="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabIndex="0">
-          <button onClick={() => filterBookings('Cancelled')} className="btn btn-link">Show Cancelled Bookings</button>
-        </div>
-      </div> */}
       <AddNewLead show={showOffcanvas} close={handleCloseOffcanvas} />
       <div className="col-12 actions_menu">
         <div className="action_menu_left col-5">
@@ -129,7 +170,7 @@ function Table() {
           </div>
         </div>
         <div className="action_buttons col-7">
-          <button className="btn btn-outline" style={{ borderRadius: "6px" }}>
+          <button className="btn btn-outline" style={{ borderRadius: "6px" }} onClick={exportToCSV}>
             Export &nbsp;
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -159,91 +200,84 @@ function Table() {
         <div class="table-responsive custom-table-responsive">
           <table class="table custom-table">
             <tbody>
-            {filteredBookings.map((item, index) => {
-                  return (
-                    <>
-                      <tr scope="row">
-                        <td>
-                          <span className="table-head">Booking ID</span>
-                          <small class="d-block">{item?.booking_id}</small>
-                        </td>
-                        <td>
-                          <span className="table-head"> Service</span>
+              {filteredBookings.map((item, index) => {
+                return (
+                  <>
+                    <tr scope="row">
+                      <td>
+                        <span className="table-head">Booking ID</span>
+                        <small class="d-block">{item?.booking_id}</small>
+                      </td>
+                      <td>
+                        <span className="table-head"> Service</span>
 
-                          <small class="d-block">{item?.service}</small>
-                        </td>
-                        <td>
-                          <span className="table-head">Name</span>
-                          <small class="d-block">{item?.first_name} {item?.last_name}</small>
-                        </td>
-                        <td>
-                          <span className="table-head"> Booking Date</span>
-                          <small class="d-block">{formatDate(item?.start_date)}</small>
-                        </td>
-                        <td>
-                          <span className="table-head"> Created On</span>
-                          <small class="d-block">{formatDate(item?.start_date)}</small>
-                        </td>
-                        <td>
-                          <span className="table-head"> Price</span>
-                          <small class="d-block">$ 13,000</small>
-                        </td>
-                        <td>
-                          <span className="table-head"> Travellers</span>
-                          <small class="d-block">{item?.number_of_people}</small>
-                        </td>
-                        <td>
-                          <button type="button" class="btn btn-primary" style={{ color: '#fff' }}>View
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr class="spacer"><td colspan="100"></td></tr>
-                    </>
-                  )
-                })
+                        <small class="d-block">{item?.service}</small>
+                      </td>
+                      <td>
+                        <span className="table-head">Name</span>
+                        <small class="d-block">{item?.first_name} {item?.last_name}</small>
+                      </td>
+                      <td>
+                        <span className="table-head"> Booking Date</span>
+                        <small class="d-block">{formatDate(item?.start_date)}</small>
+                      </td>
+                      <td>
+                        <span className="table-head"> Created On</span>
+                        <small class="d-block">{formatDate(item?.start_date)}</small>
+                      </td>
+                      <td>
+                        <span className="table-head"> Price</span>
+                        <small class="d-block">{item?.price || 0}</small>
+                      </td>
+                      <td>
+                        <span className="table-head"> Travellers</span>
+                        <small class="d-block">{item?.number_of_people}</small>
+                      </td>
+                      <td>
+                      <Link
+                                to={`/booking-view/${item?.id}/`}
+                               
+
+                                className="btn btn-sm btn-info"
+                                style={{
+                                  padding: "7px 10px 5px 10px",
+                                  borderRadius: "4px",
+                                  borderRadius:
+                                    "var(--roundness-round-inside, 6px)",
+                                  background: "#187AF7",
+                                  boxSShadow:
+                                    "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
+                                }}
+                              >
+                                View &nbsp;
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  fill="none"
+                                >
+                                  <path
+                                    d="M4 12L12 4M12 4H6M12 4V10"
+                                    stroke="white"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </Link>
+                        {/* <button type="button" class="btn btn-primary" style={{ color: '#fff' }} href="booking-view">View
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </button> */}
+                      </td>
+                    </tr>
+                    <tr class="spacer"><td colspan="100"></td></tr>
+                  </>
+                )
+              })
               }
-
-              {/* <tr scope="row">
-                <td>
-                  <span className="table-head">Booking ID</span>
-                  <small class="d-block">#SS56DG2355D</small>
-                </td>
-                <td>
-                  <span className="table-head"> Service</span>
-
-                  <small class="d-block">Jet ski</small>
-                </td>
-                <td>
-                  <span className="table-head"> Name</span>
-                  <small class="d-block">James Corden</small>
-                </td>
-                <td>
-                  <span className="table-head"> Booking Date</span>
-                  <small class="d-block">22 FEB 2023</small>
-                </td>
-                <td>
-                  <span className="table-head"> Created On</span>
-                  <small class="d-block">18 JAN 2023</small>
-                </td>
-                <td>
-                  <span className="table-head"> Price</span>
-                  <small class="d-block">$ 13,000</small>
-                </td>
-                <td>
-                  <span className="table-head"> Travellers</span>
-                  <small class="d-block">1</small>
-                </td>
-                <td>
-                  <button type="button" class="btn btn-primary" style={{color:'#fff'}}>View
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                </td>
-              </tr> */}
             </tbody>
           </table>
         </div>

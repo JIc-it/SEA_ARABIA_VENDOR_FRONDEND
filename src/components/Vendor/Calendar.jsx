@@ -36,16 +36,16 @@ const Calendar = () => {
     }, [filtering]);
 
     //
-
-    const handleListSubCategory = (id) => {
-        subcategoryIdFilter(id)
-            .then((data) => {
-                setSubCategorylist(data.results);
-            })
-            .catch((error) => {
-                console.error("Error fetching lead data:", error);
-            });
-    };
+// get subcategory with castegory id
+const handleListSubCategory = (id) => {
+    subcategoryIdFilter(id)
+      .then((data) => {
+        setSubCategorylist(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching lead data:", error);
+      });
+  };
 
     const handleCategoryChange = (e) => {
         const selectedOption = e.target.options[e.target.selectedIndex];
@@ -55,30 +55,69 @@ const Calendar = () => {
         handleListSubCategory(id);
     };
 
-    useEffect(() => {
-        getCategoryist()
-            .then((data) => {
-                setCategorylist(data.results);
-            })
-            .catch((error) => {
-                console.error("Error fetching Category data:", error);
-            });
-        getSubCategoryist()
-            .then((data) => {
-                setSubCategorylist(data.results);
-            })
-            .catch((error) => {
-                console.error("Error fetching Sub Category data:", error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     getCategoryist()
+    //         .then((data) => {
+    //             setCategorylist(data.results);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching Category data:", error);
+    //         });
+    //     getSubCategoryist()
+    //         .then((data) => {
+    //             setSubCategorylist(data.results);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching Sub Category data:", error);
+    //         });
+    // }, []);
 
+// get category list
+useEffect(() => {
+    getCategoryist()
+      .then((data) => {
+        console.log('DATA', data)
+        setCategorylist(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Category data:", error);
+      });
+  }, []);
 
-    const handleSubCategoryChange = (e) => {
-        const selectedOption = e.target.options[e.target.selectedIndex];
-        const id = selectedOption.getAttribute("id");
-        const subcategoryName = e.target.value;
-        console.log(id, subcategoryName, "sub-category-change");
-    };
+  // subcategory onchange handler
+  const handleSubCategoryChange = (e) => {
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const id = selectedOption.getAttribute("id");
+    const subcategoryName = e.target.value;
+    console.log(id, subcategoryName, "sub-category-change");
+    const data = { subcategoryid: id }
+    // service filter with subcategory id
+    getServiceFilterList(data).then((data) => {
+
+    //   setoptionmachine(data)
+    })
+      .catch((error) => {
+        console.error("Error fetching lead data:", error);
+      });
+  };
+
+  // service filter api
+//   useEffect(() => {
+//     getServiceFilterList(filtering)
+//       .then((data) => {
+//         console.log(data);
+//         setserviceFilterList(data);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching Service Filter List data:", error);
+//       });
+//   }, [filtering]);
+    // const handleSubCategoryChange = (e) => {
+    //     const selectedOption = e.target.options[e.target.selectedIndex];
+    //     const id = selectedOption.getAttribute("id");
+    //     const subcategoryName = e.target.value;
+    //     console.log(id, subcategoryName, "sub-category-change");
+    // };
 
     // Service Booking Availability
     useEffect(() => {
@@ -117,6 +156,40 @@ const Calendar = () => {
                                     />
                                 </div>
                             </div>
+                            {/* <div className='col-lg-12'>
+                                <label className="form-label">Category :</label>
+                                <div className="status_dropdown">
+                                    <select
+                                        type="text"
+                                        className="form-select mb-3 status_selector"
+                                        value={selectedValue}
+                                        onChange={handleCategoryChange}
+                                    >
+                                        <option value="" id={"0"}>Category</option>
+                                        {categorylist &&
+                                            categorylist.map((ele, i) => {
+                                                return <option id={ele.id}>{ele.name}</option>;
+                                            })}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className='col-lg-12'>
+                                <label className="form-label">Sub Category :</label>
+                                <div className="status_dropdown">
+                                    <select
+                                        type="text"
+                                        className="form-select mb-3 status_selector"
+                                        value={selectedValue}
+                                        onChange={handleSubCategoryChange}
+                                    >
+                                        <option value="" id={"0"}>Sub Category</option>
+                                        {subcategorylist &&
+                                            subcategorylist.map((item, i) => {
+                                                return <option id={item.id}>{item.name}</option>;
+                                            })}
+                                    </select>
+                                </div>
+                            </div> */}
                             <div className='col-lg-12'>
                                 <label className="form-label">Category :</label>
                                 <div className="status_dropdown">
