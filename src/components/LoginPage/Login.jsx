@@ -141,7 +141,7 @@ const Login = () => {
                     />
                     <Typography variant="span">Password</Typography>
                     <TextField
-                      autocomplete="off"
+                      autoComplete="off"
                       size="small"
                       error={
                         !!(formik.touched.password && formik.errors.password)
@@ -173,9 +173,8 @@ const Login = () => {
                     type="submit"
                     variant="contained"
                     style={{
-                      borderRadius: " var(--roundness-round-inside, 6px)",
+                      borderRadius: "var(--roundness-round-inside, 6px)",
                       background: "#006875",
-
                       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
                       textTransform: "none",
                     }}
@@ -190,7 +189,7 @@ const Login = () => {
                   >
                     <Link
                       // component={NextLink}
-                      href="/email-verification"
+                      href="/email-varification"
                       underline="hover"
                       variant="subtitle2"
                       style={{ color: "#187AF7" }}

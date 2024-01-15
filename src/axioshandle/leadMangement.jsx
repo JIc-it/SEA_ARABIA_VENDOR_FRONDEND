@@ -39,9 +39,7 @@ export const getTotalBook = () => {
 export const getbookingList = () => {
   const accessToken = localStorage.getItem("access_token");
   const decoded = jwtDecode(accessToken);
-
   return axiosInstance
-    // .get(`${bookinglistIdURl}`,{params:{vendor:decoded?.user_id}})
     .get("booking/bookings/vendor/")
     .then((response) => response.data)
     .catch((error) => {

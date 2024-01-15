@@ -133,7 +133,7 @@ function Table() {
       <div className="col-12 actions_menu">
         <div className="action_menu_left col-5">
           <div>
-            <form action="" method="post" autocomplete="off">
+            <form action="" method="post" autoComplete="off">
               <div className="input-icon">
                 <span className="input-icon-addon">
                   <svg
@@ -210,8 +210,7 @@ function Table() {
                       </td>
                       <td>
                         <span className="table-head"> Service</span>
-
-                        <small class="d-block">{item?.service}</small>
+                        <small class="d-block">Service Name</small>
                       </td>
                       <td>
                         <span className="table-head">Name</span>
@@ -227,53 +226,49 @@ function Table() {
                       </td>
                       <td>
                         <span className="table-head"> Price</span>
-                        <small class="d-block">{item?.price || 0}</small>
+                        <small class="d-block">{item?.price_total || 0}</small>
                       </td>
                       <td>
                         <span className="table-head"> Travellers</span>
                         <small class="d-block">{item?.number_of_people}</small>
                       </td>
                       <td>
-                      <Link
-                                to={`/booking-view/${item?.id}/`}
-                               
+                        <Link
+                          to={`/booking-view/${item?.id}/`}
 
-                                className="btn btn-sm btn-info"
-                                style={{
-                                  padding: "7px 10px 5px 10px",
-                                  borderRadius: "4px",
-                                  borderRadius:
-                                    "var(--roundness-round-inside, 6px)",
-                                  background: "#187AF7",
-                                  boxSShadow:
-                                    "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
-                                }}
-                              >
-                                View &nbsp;
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                >
-                                  <path
-                                    d="M4 12L12 4M12 4H6M12 4V10"
-                                    stroke="white"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              </Link>
-                        {/* <button type="button" class="btn btn-primary" style={{ color: '#fff' }} href="booking-view">View
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+
+                          className="btn btn-sm btn-info"
+                          style={{
+                            padding: "7px 10px 5px 10px",
+                            borderRadius: "4px",
+                            borderRadius:
+                              "var(--roundness-round-inside, 6px)",
+                            background: "#187AF7",
+                            boxSShadow:
+                              "0px 1px 2px 0px rgba(16, 24, 40, 0.04)",
+                              color: "#fff"
+                          }}
+                        >
+                          View &nbsp;
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                          >
+                            <path
+                              d="M4 12L12 4M12 4H6M12 4V10"
+                              stroke="white"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
-                        </button> */}
+                        </Link>
                       </td>
                     </tr>
-                    <tr class="spacer"><td colspan="100"></td></tr>
+                    <tr class="spacer"><td colSpan="100"></td></tr>
                   </>
                 )
               })

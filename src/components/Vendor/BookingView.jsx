@@ -68,7 +68,7 @@ const BookingView = () => {
                                     window.location.href = `tel:${booking?.mobile}`;
                                 }}>
                                     <div className='vender-txt'>Call Vendor</div>
-                                    <div style={{ width: '20px', height: '20px', position: 'relative'}}>
+                                    <div style={{ width: '20px', height: '20px', position: 'relative' }}>
                                         {/* <div style={{ width: '15px', height: '15px', left: '2.50px', top: '2.50px', position: 'absolute', background: "#fff" }}></div>
                                         <div style={{ width: '7.91px', height: '7.92px', left: '11.04px', top: '1.04px', position: 'absolute', background: "#fff" }}></div> */}
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -296,74 +296,50 @@ const BookingView = () => {
                 <div className='row'>
                     <div className='container' style={{ backgroundColor: "white", width: "100%", padding: "2%", marginTop: "2%", borderRadius: "5px" }}>
                         <div className='row'>
-                            <h3>Travellers</h3>
-                            <div className='col-lg-4'>
+                            <h3>Cancellation And Refund</h3>
+                            <div className='col-lg-6'>
                                 <div className='d-flex'>
                                     <div className='w-100'>
                                         <div style={{ backgroundColor: '#F8F8F8', padding: 10 }}>
-                                            <span className='payment-txt' style={{ color: '#000' }}>Traveller :</span>
+                                            <span className='payment-txt' style={{ color: '#000' }}>Cancellation :</span>
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>
-                                                <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                {/* <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3332 12.9997C15.7273 12.9997 17.6665 11.0605 17.6665 8.66634C17.6665 6.27217 15.7273 4.33301 13.3332 4.33301C10.939 4.33301 8.99984 6.27217 8.99984 8.66634C8.99984 11.0605 10.939 12.9997 13.3332 12.9997ZM13.3332 15.1663C10.4407 15.1663 4.6665 16.618 4.6665 19.4997V20.583C4.6665 21.1788 5.154 21.6663 5.74984 21.6663H20.9165C21.5123 21.6663 21.9998 21.1788 21.9998 20.583V19.4997C21.9998 16.618 16.2257 15.1663 13.3332 15.1663Z" fill="#252525" />
-                                                </svg>
+                                                </svg> */}
                                             </span>
                                             <br></br>
-                                            <span className='payment-txt'>Name :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>James Demo</span>
+                                            <span className='payment-txt'>Cancelled On :</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.cancelled_date}</span>
                                             <br></br>
-                                            <span className='payment-txt'>Age :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>28</span>
-                                            <br></br>
-                                            <span className='payment-txt'>Gender :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>Male</span>
+                                            <span className='payment-txt'>Reason For Cancellation :</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.cancellation_reason}</span>
                                             <br></br>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className='col-lg-4'>
+                            <div className='col-lg-6'>
                                 <div className='d-flex'>
                                     <div className='w-100'>
                                         <div style={{ backgroundColor: '#F8F8F8', padding: 10 }}>
-                                            <span className='payment-txt' style={{ color: '#000' }}>Traveller :</span>
+                                            <span className='payment-txt' style={{ color: '#000' }}>Refund :</span>
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>
-                                                <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                {/* <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3332 12.9997C15.7273 12.9997 17.6665 11.0605 17.6665 8.66634C17.6665 6.27217 15.7273 4.33301 13.3332 4.33301C10.939 4.33301 8.99984 6.27217 8.99984 8.66634C8.99984 11.0605 10.939 12.9997 13.3332 12.9997ZM13.3332 15.1663C10.4407 15.1663 4.6665 16.618 4.6665 19.4997V20.583C4.6665 21.1788 5.154 21.6663 5.74984 21.6663H20.9165C21.5123 21.6663 21.9998 21.1788 21.9998 20.583V19.4997C21.9998 16.618 16.2257 15.1663 13.3332 15.1663Z" fill="#252525" />
-                                                </svg>
+                                                </svg> */}
                                             </span>
                                             <br></br>
-                                            <span className='payment-txt'>Name :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>James Demo</span>
+                                            <span className='payment-txt'>Refund Type :</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.refund_type}</span>
                                             <br></br>
-                                            <span className='payment-txt'>Age :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>28</span>
+                                            <span className='payment-txt'>Refund Amount :</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.refund_amount}</span>
                                             <br></br>
-                                            <span className='payment-txt'>Gender :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>Male</span>
+                                            <span className='payment-txt'>Refunded On :</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>Demo Test</span>
                                             <br></br>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-lg-4'>
-                                <div className='d-flex'>
-                                    <div className='w-100'>
-                                        <div style={{ backgroundColor: '#F8F8F8', padding: 10 }}>
-                                            <span className='payment-txt' style={{ color: '#000' }}>Traveller :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>
-                                                <svg width="20" height="19" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M13.3332 12.9997C15.7273 12.9997 17.6665 11.0605 17.6665 8.66634C17.6665 6.27217 15.7273 4.33301 13.3332 4.33301C10.939 4.33301 8.99984 6.27217 8.99984 8.66634C8.99984 11.0605 10.939 12.9997 13.3332 12.9997ZM13.3332 15.1663C10.4407 15.1663 4.6665 16.618 4.6665 19.4997V20.583C4.6665 21.1788 5.154 21.6663 5.74984 21.6663H20.9165C21.5123 21.6663 21.9998 21.1788 21.9998 20.583V19.4997C21.9998 16.618 16.2257 15.1663 13.3332 15.1663Z" fill="#252525" />
-                                                </svg>
-                                            </span>
-                                            <br></br>
-                                            <span className='payment-txt'>Name :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>James Demo</span>
-                                            <br></br>
-                                            <span className='payment-txt'>Age :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>28</span>
-                                            <br></br>
-                                            <span className='payment-txt'>Gender :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>Male</span>
+                                            <span className='payment-txt'>Refund Details :</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.refund_details}</span>
                                             <br></br>
                                         </div>
                                     </div>
