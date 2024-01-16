@@ -6,7 +6,7 @@ import Login from "./components/LoginPage/Login";
 import EmailVerification from "./components/LoginPage/EmailVerification";
 import VerificationCode from "./components/LoginPage/VerificationCode";
 import ResetLoginPassword from "./components/LoginPage/ResetLoginPassword";
-
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <Router>

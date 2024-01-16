@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-// import { Card, CardContent, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+import { Card, CardContent, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
+  
   getCategoryist,
   getSubCategoryist,
   subcategoryIdFilter,
@@ -83,9 +84,9 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
 
       getsServicesavailableFilterList(data)
         .then((data) => {
-       
+
           setTimeSlots(data?.time);
-         
+
         })
         .catch((error) => {
           console.error("Error fetching lead data:", error);
@@ -226,41 +227,68 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
 
     },
 
+    // onSubmit: async (values) => {
+
+    //   console.log('data', machineId, selectedDate, selectedSlots)
+
+    //   setIsLoading(true);
+    //   if (!isLoading) {
+
+    //     const [year, month, day] = selectedDate.split('-');
+
+    //     const reversedDate = `${day}-${month}-${year}`;
+    //     const data = {
+    //       service: machineId,
+    //       date: reversedDate,
+    //       time: selectedSlots,
+    //       update_type: 'time'
+
+    //     }
+    //     console.log('submit', data)
+    //     const adminData = await createAvailablity(data);
+    //     if (adminData) {
+    //       setIsRefetch(!isRefetch);
+    //       toast.success("Mark as Avaivable Added Successfully.");
+    //       close();
+    //       setIsLoading(false);
+    //     } else {
+    //       console.error("Error while creating Admin:", adminData.error);
+    //       setIsLoading(false);
+    //     }
+
+    //   }
+    //   setIsLoading(false);
+    // },
     onSubmit: async (values) => {
-
-      console.log('data', machineId, selectedDate, selectedSlots)
-    
       setIsLoading(true);
-      if (!isLoading) {
-        // const newArray = selectedSlots.map((value) => ({
-        //   time: value, make_slot_available: true
-        // }))
-        //
-        const [year,month,day] = selectedDate.split('-');
 
-        // Create the reversed date string
+      try {
+        const [year, month, day] = selectedDate.split('-');
         const reversedDate = `${day}-${month}-${year}`;
         const data = {
           service: machineId,
           date: reversedDate,
           time: selectedSlots,
           update_type: 'time'
-          
-        }
-       console.log('submit', data)
+        };
+
+        console.log('submit', data);
+
         const adminData = await createAvailablity(data);
+
         if (adminData) {
+          toast.success("Mark as Available Added Successfully.");
           setIsRefetch(!isRefetch);
-          toast.success("Mark as Avaivable Added Successfully.");
-          close();
-          setIsLoading(false);
+
+          // close();
         } else {
           console.error("Error while creating Admin:", adminData.error);
-          setIsLoading(false);
         }
-
+      } catch (error) {
+        console.error("Error during form submission:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     },
   });
 
@@ -320,7 +348,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
 
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <img src={option.service_image[0]?.image} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
-                          <div>   
+                          <div>
                             <div>
                               <strong>{option?.name}</strong>
                             </div>
@@ -336,7 +364,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                     <label className="form-label">Calendar :</label>
                     <input
                       type="date"
-                  
+
                       className="form-control"
                       placeholder="Date"
                       value={selectedDate}
@@ -362,17 +390,31 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           }}
                           onClick={() => handleSlotClick(slot?.time)}
                         >
-                          {/* <Typography variant="body2">
+                          <Typography variant="body2">
                             {slot?.time}
-                          </Typography> */}
+                          </Typography>
                         </div>
                       ))}
                     </div>
                     {/* <button type="button" class="btn btn-info btn-md btn-block" style={{ color: '#fff' }}>Mark As Available</button> */}
-                    <button
+                    {/* <button
                       className="btn btn-success"
                       type="submit"
                       onClick={onsubmit}
+                      style={{
+                        flex: 1,
+                        backgroundColor: "#006875",
+                        width: "92%",
+                        position: "absolute",
+                        bottom: "1rem",
+                      }}
+                    >
+                      {isLoading ? <CircularProgress /> : "Mark As Available"}
+                    </button> */}
+                    <button
+                      className="btn btn-success"
+                      type="submit"
+                      onClick={formik.handleSubmit}  // <-- Corrected line
                       style={{
                         flex: 1,
                         backgroundColor: "#006875",

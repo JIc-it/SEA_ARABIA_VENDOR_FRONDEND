@@ -32,20 +32,40 @@ export const createAvailablityTime = (id) => {
     });
 };
 
-export const createAvailablity = (data) => {
-  console.log('datakl;kl;klkl;', data)
-  if (data) {
-    return axiosInstance
-      .patch(`service/update-availability/${data.service}/${data.date}/`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Important for sending form data
-        }
-      })
-      .then((response) => response.data)
-      .catch((error) => {
-        console.error("Error while login:", error);
-        throw error;
+export const createAvailablity = async (data) => {
+  console.log('data:', data);
+
+  try {
+    if (data) {
+      // Use JSON.stringify to convert the payload to JSON format
+      const jsonData = JSON.stringify({
+        service: data.service,
+        // date: data.date,
+        // time: 5,
+        // update_type: 'time',
       });
+
+      const response = await axiosInstance.patch(
+        `service/update-availability/${data.service}/${data.date}/`,
+        jsonData,
+
+        {
+          headers: {
+            'Content-Type': 'application/json', // Use 'application/json' for JSON payloads
+          }, params: {
+            date: data.date,
+            time: data.time,
+            update_type: 'time',
+          }
+        }
+      );
+
+      // Return the response data
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error while updating availability:", error);
+    throw error; // Re-throw the error for handling in the calling code
   }
 };
 
