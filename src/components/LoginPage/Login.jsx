@@ -110,7 +110,7 @@ const Login = () => {
                 }}
               >
                 <Stack sx={{ mb: 3 }}>
-                  <Typography variant="h6">Sign In with your Email</Typography>
+                  <Typography variant="h6"> Sign In with your Email</Typography>
                 </Stack>
 
                 <form
