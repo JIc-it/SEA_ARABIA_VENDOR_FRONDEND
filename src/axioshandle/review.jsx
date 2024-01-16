@@ -1,5 +1,5 @@
 import axiosInstance from "./authHandle";
-const subcategoryidURl="main/subcategory-list"
+const subcategoryidURl = "main/subcategory-list"
 
 export const getsServicesavailableFilterList = (data) => {
   return axiosInstance
@@ -13,7 +13,7 @@ export const getsServicesavailableFilterList = (data) => {
 
 export const subcategoryIdFilter = (id) => {
   return axiosInstance
-    .get(`${subcategoryidURl}`,{params:{category:id}})
+    .get(`${subcategoryidURl}`, { params: { category: id } })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching order request:", error);
@@ -34,16 +34,19 @@ export const createAvailablityTime = (id) => {
 
 export const createAvailablity = (data) => {
   console.log('datakl;kl;klkl;', data)
-  if(data){
+  if (data) {
     return axiosInstance
-    .patch(`service/update-availability/${data.service}/${data.date}/`, data)
-    .then((response) => response.data)
-    .catch((error) => {
+      .patch(`service/update-availability/${data.service}/${data.date}/`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Important for sending form data
+        }
+      })
+      .then((response) => response.data)
+      .catch((error) => {
         console.error("Error while login:", error);
         throw error;
-    });
+      });
   }
-  
 };
 
 // New Api collection 
@@ -108,7 +111,7 @@ export const getCategoryist = () => {
 };
 export const getSubCategoryist = (id) => {
   return axiosInstance
-    .get("main/subcategory-list",{params:{category:id}})
+    .get("main/subcategory-list", { params: { category: id } })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching lead request:", error);
@@ -117,7 +120,7 @@ export const getSubCategoryist = (id) => {
 };
 export const getServiceFilterList = (data) => {
   return axiosInstance
-    .get("service/service-filter-list-cms",{params:{search:data.search,category:data?.categoryid,sub_category:data?.subcategoryid}})
+    .get("service/service-filter-list-cms", { params: { search: data.search, category: data?.categoryid, sub_category: data?.subcategoryid } })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching lead request:", error);
@@ -126,16 +129,16 @@ export const getServiceFilterList = (data) => {
 };
 export const getServiceReviewFilter = (rating) => {
   return axiosInstance
-    .get(`service/service-review-list`,{params:{rating:rating}})
+    .get(`service/service-review-list`, { params: { rating: rating } })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching lead request:", error);
       throw error;
     });
 };
-export const getServiceReviewFilter2 = (id,rating) => {
+export const getServiceReviewFilter2 = (id, rating) => {
   return axiosInstance
-    .get(`service/service-review-list`,{params:{service_id:id,rating:rating}})
+    .get(`service/service-review-list`, { params: { service_id: id, rating: rating } })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching lead request:", error);

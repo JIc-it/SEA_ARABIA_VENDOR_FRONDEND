@@ -244,7 +244,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
           service: machineId,
           date: reversedDate,
           time: selectedSlots,
-          update_type: 'date'
+          update_type: 'time'
           
         }
        console.log('submit', data)
