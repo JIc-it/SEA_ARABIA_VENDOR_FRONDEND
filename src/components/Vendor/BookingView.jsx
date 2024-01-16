@@ -312,7 +312,7 @@ const BookingView = () => {
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.cancelled_date}</span>
                                             <br></br>
                                             <span className='payment-txt'>Reason For Cancellation :</span>
-                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.cancellation_reason}</span>
+                                            <span className='payment-subtxt'  style={{ float: 'inline-end' }}>{booking?.cancellation_reason}</span>
                                             <br></br>
                                         </div>
                                     </div>
