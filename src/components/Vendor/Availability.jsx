@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { Card, CardContent, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+// import { Card, CardContent, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -362,9 +362,9 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           }}
                           onClick={() => handleSlotClick(slot?.time)}
                         >
-                          <Typography variant="body2">
+                          {/* <Typography variant="body2">
                             {slot?.time}
-                          </Typography>
+                          </Typography> */}
                         </div>
                       ))}
                     </div>
