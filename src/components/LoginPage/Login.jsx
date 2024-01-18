@@ -3,26 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  Alert,
-  Box,
-  Button,
-  FormHelperText,
-  Link,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
+import { Alert, Box, Button, FormHelperText, Link, Stack, Tab, Tabs, TextField, Typography, IconButton, InputAdornment } from "@mui/material";
 import CopyWrite from "./CopyWrite";
 import { passwordRegex } from "../../helpers";
 import LoginImageContainer from "./LoginImageContainer";
 import { useNavigate } from "react-router";
 import { loginRequest } from '../../axioshandle/authHandle'
 import { toast } from "react-toastify";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -140,7 +129,7 @@ const Login = () => {
                       }}
                     />
                     <Typography variant="span">Password</Typography>
-                    <TextField
+                    {/* <TextField
                       autoComplete="off"
                       size="small"
                       error={
@@ -157,6 +146,32 @@ const Login = () => {
                       type={"password"}
                       value={formik.values.password}
                       inputProps={{ maxLength: 50 }}
+                    /> */}
+                    <TextField
+                      autoComplete="off"
+                      size="small"
+                      error={!!(formik.touched.password && formik.errors.password)}
+                      fullWidth
+                      helperText={formik.touched.password && formik.errors.password}
+                      placeholder="Password"
+                      name="password"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      type={showPassword ? "text" : "password"}
+                      value={formik.values.password}
+                      inputProps={{ maxLength: 50 }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowPassword((prev) => !prev)}
+                              edge="end"
+                            >
+                              {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Stack>
 

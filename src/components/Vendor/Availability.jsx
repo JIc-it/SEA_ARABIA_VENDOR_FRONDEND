@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-// import { Card, CardContent, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -47,28 +46,6 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
     categoryid: "",
     subcategoryid: ""
   })
-  // console.log('CATEGORY', categorylist)
-  // // //  load time slot
-
-  // // machine onchange handler 
-  // const onChangeMachine = (e) => {
-
-  //   if (selectedDate && e?.id) {
-  //     setmachineId(e?.id)
-  //     const data = { date: selectedDate, machineId: e?.id }
-  //     getsServicesavailableFilterList(data).then((data) => {
-  //       data?.map((item) => {
-  //         setTimeSlots(item?.time)
-  //         console.log('date', item?.time)
-  //       })
-
-
-  //     })
-  //       .catch((error) => {
-  //         console.error("Error fetching lead data:", error);
-  //       });
-  //   }
-  // }
 
   const onChangeMachine = (e) => {
     if (selectedDate && e?.id) {
@@ -127,7 +104,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
   const [selectedCards, setSelectedCards] = useState([]);
 
   const props = useSpring({
-    transform: `translateX(${-index * (100 / 7)}%)`, // Divide 100 by the number of columns (7 in this case)
+    transform: `translateX(${-index * (100 / 7)}%)`,
     display: 'flex',
     flexDirection: 'row',
     overflow: 'hidden',
@@ -215,50 +192,10 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
       });
   };
 
-  // const onsubmit = () => {
-  //   console.log('datata', machineId, selectedValue)
-
-  // }
-
-
-
   const formik = useFormik({
     initialValues: {
 
     },
-
-    // onSubmit: async (values) => {
-
-    //   console.log('data', machineId, selectedDate, selectedSlots)
-
-    //   setIsLoading(true);
-    //   if (!isLoading) {
-
-    //     const [year, month, day] = selectedDate.split('-');
-
-    //     const reversedDate = `${day}-${month}-${year}`;
-    //     const data = {
-    //       service: machineId,
-    //       date: reversedDate,
-    //       time: selectedSlots,
-    //       update_type: 'time'
-
-    //     }
-    //     console.log('submit', data)
-    //     const adminData = await createAvailablity(data);
-    //     if (adminData) {
-    //       setIsRefetch(!isRefetch);
-    //       toast.success("Mark as Avaivable Added Successfully.");
-    //       close();
-    //       setIsLoading(false);
-    //     } else {
-    //       console.error("Error while creating Admin:", adminData.error);
-    //       setIsLoading(false);
-    //     }
-
-    //   }
-    //   setIsLoading(false);
-    // },
     onSubmit: async (values) => {
       setIsLoading(true);
 
@@ -397,21 +334,6 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                         </div>
                       ))}
                     </div>
-                    {/* <button type="button" class="btn btn-info btn-md btn-block" style={{ color: '#fff' }}>Mark As Available</button> */}
-                    {/* <button
-                      className="btn btn-success"
-                      type="submit"
-                      onClick={onsubmit}
-                      style={{
-                        flex: 1,
-                        backgroundColor: "#006875",
-                        width: "92%",
-                        position: "absolute",
-                        bottom: "1rem",
-                      }}
-                    >
-                      {isLoading ? <CircularProgress /> : "Mark As Available"}
-                    </button> */}
                     <button
                       className="btn btn-success"
                       type="submit"

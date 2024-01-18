@@ -12,16 +12,6 @@ export const getVendorList = () => {
     });
 };
 
-// export const getTotalBook = () => {
-//   return axiosInstance
-//     .get("booking/booking-count")
-//     .then((response) => response.data)
-//     .catch((error) => {
-//       console.error("Error while fetching lead request:", error);
-//       throw error;
-//     });
-// };
-
 export const getTotalBook = () => {
   const accessToken = localStorage.getItem("access_token");
   const decoded = jwtDecode(accessToken);
