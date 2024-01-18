@@ -261,9 +261,20 @@ const Calendar = () => {
                                                 <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
                                             </svg>&nbsp;
-                                            {/* {new Date(filterdataidData?.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - {new Date(filterdataidData.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} */}
+                                            {/* {new Date(C?.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - {new Date(filterdataidData.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} */}
                                      
                                         </span><br />
+                                        {
+                                           filterdataidData?.time?.map((time, index)=>{
+                                            if(time?.make_slot_available === true){
+                                                return(
+                                                    <>
+                                                    <span className="card-text">{time?.time}</span><br />
+                                                    </>
+                                                )
+                                            }
+                                           })
+                                        }
                                         {/* {filterdataidData.time[0].time}
                                         {filterdataidData.time[0]?.image} */}
                                         {/* <span className="card-text">{data.starting_point}</span><br /> */}
