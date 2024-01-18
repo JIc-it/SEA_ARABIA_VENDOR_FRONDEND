@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import dashboardLogo from "../../assets/dashboard-logo.png"
+
 function SideBar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activeLink = location.pathname;
   return (
     <aside
       className="navbar navbar-vertical navbar-expand-lg"
@@ -19,7 +23,7 @@ function SideBar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <h1 className="navbar-brand navbar-brand-autodark">
-          <a href="/dashboard"><img src={dashboardLogo}/></a>
+          <a href="/dashboard"><img src={dashboardLogo} /></a>
         </h1>
         <div className="navbar-nav flex-row d-lg-none">
           <div className="nav-item d-none d-lg-flex me-3">
@@ -353,8 +357,20 @@ function SideBar() {
         </div>
         <div className="collapse navbar-collapse" id="sidebar-menu">
           <ul className="navbar-nav pt-lg-3 " style={{ gap: "30px" }}>
-            <li className="nav-item">
-              <a className="nav-link" href="/lead-managment">
+
+
+            <li
+              className={`nav-item ${activeLink === "/lead-managment" ? "active" : ""
+                }`}
+            >
+              <a
+                className="nav-link"
+                href="/lead-managment"
+                style={{
+                  color: activeLink === "/lead-managment" ? "#006875" : "",
+                  fontSize: activeLink === "/lead-managment" ? "17px" : "",
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -374,11 +390,21 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="nav-link-title">&nbsp; Booking{" "}</span>
+                <span className="nav-link-title"> &nbsp; Booking</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/availability">
+            <li
+              className={`nav-item ${activeLink === "/availability" ? "active" : ""
+                }`}
+            >
+              <a
+                className="nav-link"
+                href="/availability"
+                style={{
+                  color: activeLink === "/availability" ? "#006875" : "",
+                  fontSize: activeLink === "/availability" ? "17px" : "",
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -398,12 +424,22 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                
-                <span className="nav-link-title">&nbsp; Availability {""}</span>
+                <span className="nav-link-title"> &nbsp; Availability</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/calendar">
+
+            <li
+              className={`nav-item ${activeLink === "/calendar" ? "active" : ""
+                }`}
+            >
+              <a
+                className="nav-link"
+                href="/calendar"
+                style={{
+                  color: activeLink === "/calendar" ? "#006875" : "",
+                  fontSize: activeLink === "/calendar" ? "17px" : "",
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -423,11 +459,22 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="nav-link-title">&nbsp; Calendar{""}</span>
+                <span className="nav-link-title"> &nbsp; Calendar</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/review">
+
+            <li
+              className={`nav-item ${activeLink === "/review" ? "active" : ""
+                }`}
+            >
+              <a
+                className="nav-link"
+                href="/review"
+                style={{
+                  color: activeLink === "/review" ? "#006875" : "",
+                  fontSize: activeLink === "/review" ? "17px" : "",
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
@@ -447,9 +494,10 @@ function SideBar() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="nav-link-title">&nbsp; Ratings{""}</span>
+                <span className="nav-link-title"> &nbsp; Rating</span>
               </a>
             </li>
+
           </ul>
         </div>
       </div>
