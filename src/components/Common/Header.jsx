@@ -1,4 +1,36 @@
+import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
+import HeaderOffCanvas from "./HeaderOffCanvas";
+import { getNotificationList } from "../../axioshandle/Notification";
+import { toast } from "react-toastify";
 function Header() {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [notifycount, setNotifycount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [listPageUrl, setListPageUrl] = useState({
+    next: null,
+    previous: null,
+  });
+  const [data, setdata] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getNotificationList()
+      .then((data) => {
+        setIsLoading(false);
+        setdata(data.results);
+        setNotifycount(data.results.length);
+        setListPageUrl({
+          next: data.next,
+          previous: data.previous,
+        });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        toast.error(error.response.data);
+      });
+  }, []);
   return (
     <header className="navbar navbar-expand-md d-none d-lg-flex d-print-none">
       <div className="container-xl" style={{ marginRight: "15px" }}>
@@ -40,31 +72,49 @@ function Header() {
               </svg>
             </a>
             <div className="nav-item dropdown d-none d-md-flex me-3">
-              <a
-                href="#"
-                className="nav-link px-0"
-                data-bs-toggle="dropdown"
-                tabIndex="-1"
-                aria-label="Show notifications"
+              <div
+                className="nav-item dropdown d-none d-md-flex me-3"
+                onClick={() => setOpen(true)}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <a
+                  href="#"
+                  className="nav-link px-0"
+                // data-bs-toggle="dropdown"
+                // tabIndex="-1"
+                // aria-label="Show notifications"
                 >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
-                  <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
-                </svg>
-                <span className="badge bg-red"></span>
-              </a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+                    <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+                  </svg>
+                  {notifycount !== 0 && <span className="badge bg-red"></span>}
+                </a>
+              </div>
+              {open && (
+                <HeaderOffCanvas
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                  listPageUrl={listPageUrl}
+                  setListPageUrl={setListPageUrl}
+                  data={data}
+                  setdata={setdata}
+                  countset={setNotifycount}
+                  open={open}
+                  setOpen={setOpen}
+                />
+              )}
               <div className="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
                 <div className="card">
                   <div className="card-header">
