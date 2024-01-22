@@ -1,6 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 import axiosInstance from "./authHandle";
 const bookingViewURL="booking/bookings"
+const cancellationrequestURL = "booking/booking-cancellation";
+
 
 export const getVendorList = () => {
   return axiosInstance
@@ -48,3 +50,12 @@ export const getBooking = (id) => {
     });
 };
 
+export const updateCancellation = (id) => {
+  return axiosInstance
+    .put(`${cancellationrequestURL}/${id}/`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error while fetching lead request:", error);
+      throw error;
+    });
+};

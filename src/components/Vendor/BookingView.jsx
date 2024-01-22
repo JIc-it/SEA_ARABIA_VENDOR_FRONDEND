@@ -3,14 +3,17 @@ import { useState, useEffect } from "react";
 import { getTotalBook, getbookingList, getBooking } from "../../axioshandle/leadMangement"
 import { jwtDecode } from 'jwt-decode';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import CancellationModal from './CancellationModal';
 
 const BookingView = () => {
     const params = useParams();
-
+    const navigate = useNavigate()
     const [totalBooking, setTotalOrderBook] = useState(0);
     const [BookingData, setBookingData] = useState('');
     const [isLoading, setIsLoading] = useState(false)
     const [booking, setBooking] = useState({})
+    const [open2, setOpen2] = useState(false);
     // const handleListSubCategory = (id) => {
     //     subcategoryIdFilter(id)
     //         .then((data) => {
@@ -46,22 +49,96 @@ const BookingView = () => {
             });
     }, []);
 
+    const statusCheck = () => {
+        if (booking?.status === "Opened") {
+            return "Opened"
+        }
+        if (booking?.status === "Completed") {
+            return "Completed"
+        }
+        if (booking?.status === "Cancelled") {
+            return "Cancelled"
+        }
+        if (booking?.status === "Unsuccessful") {
+            return "Unsuccessful"
+        }
+        if (booking?.status === "Upcoming") {
+            return "Upcoming"
+        }
+    }
+
     return (
         <div className="page" style={{ top: 20 }}>
             <div className='container'>
+                <div className='d-flex justify-content-between align-items-center'>
+                    <div className='d-flex justify-content-between mt-1 ms-3'>
+                        <div style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
+                            <svg width={20} height={20} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="#252525" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg> &nbsp;<span style={{ fontWeight: "800" }}>Back</span>
+                        </div>
+                    </div>
+
+                    <button className='btn btn-danger' onClick={() => setOpen2(true)} style={{ color: '#fff' }}>Cancel Booking &nbsp;
+                        <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 20 20" fill="none">
+                            <path d="M16.1268 6.34754L12.8278 3.37845C11.8879 2.53256 11.418 2.10961 10.8413 1.88835L10.8337 4.16708C10.8337 6.13127 10.8337 7.11336 11.4439 7.72355C12.054 8.33375 13.0361 8.33375 15.0003 8.33375H17.9837C17.6816 7.7469 17.1406 7.26003 16.1268 6.34754Z" fill="white" />
+                            <path fillRule="evenodd" clipRule="evenodd" d="M8.33366 18.3337H11.667C14.8097 18.3337 16.381 18.3337 17.3573 17.3573C18.3337 16.381 18.3337 14.8097 18.3337 11.667V11.3027C18.3337 10.5754 18.3337 10.029 18.2982 9.58375H15.0003L14.9213 9.58375C14.007 9.58382 13.199 9.58389 12.5478 9.49633C11.8419 9.40142 11.136 9.1835 10.56 8.60744C9.98391 8.03138 9.76599 7.32556 9.67108 6.61962C9.58352 5.96836 9.58358 5.16039 9.58366 4.24613L9.59135 1.88413C9.59158 1.81543 9.59746 1.74749 9.60867 1.68088C9.26816 1.66699 8.86349 1.66699 8.35849 1.66699C5.19924 1.66699 3.61961 1.66699 2.6433 2.6433C1.66699 3.61961 1.66699 5.19096 1.66699 8.33366V11.667C1.66699 14.8097 1.66699 16.381 2.6433 17.3573C3.61961 18.3337 5.19096 18.3337 8.33366 18.3337ZM4.55838 12.0584C4.80246 11.8143 5.19819 11.8143 5.44227 12.0584L6.25033 12.8664L7.05838 12.0584C7.30246 11.8143 7.69819 11.8143 7.94227 12.0584C8.18635 12.3025 8.18635 12.6982 7.94227 12.9423L7.13421 13.7503L7.94227 14.5584C8.18635 14.8025 8.18635 15.1982 7.94227 15.4423C7.69819 15.6863 7.30246 15.6863 7.05838 15.4423L6.25033 14.6342L5.44227 15.4423C5.19819 15.6863 4.80246 15.6863 4.55838 15.4423C4.31431 15.1982 4.31431 14.8025 4.55838 14.5584L5.36644 13.7503L4.55838 12.9423C4.31431 12.6982 4.31431 12.3025 4.55838 12.0584Z" fill="white" />
+                        </svg>
+
+                    </button>
+                </div>
                 <div className='row'>
                     <div className='col-lg-4'>
                         <div className='payment-card'>
                             <div className='booking-card'>
-                                <div style={{ width: '48px', height: '48px', position: 'relative' }}>
-                                    {/* <div style={{ width: '40px', height: '40px', left: '4px', top: '4px', position: 'absolute', opacity: '0.40', background: '#08A747' }}></div>
-                                    <div style={{ width: '17px', height: '13px', left: '15.50px', top: '17.50px', position: 'absolute', background: '#08A747' }}></div> */}
+                                {/* <div style={{ width: '48px', height: '48px', position: 'relative' }}>
                                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path opacity="0.4" d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" fill="#08A747" />
                                         <path d="M32.0607 17.9393C32.6464 18.5251 32.6464 19.4749 32.0607 20.0607L22.0607 30.0607C21.4749 30.6464 20.5251 30.6464 19.9393 30.0607L15.9393 26.0607C15.3536 25.4749 15.3536 24.5251 15.9393 23.9393C16.5251 23.3536 17.4749 23.3536 18.0607 23.9393L21 26.8787L25.4697 22.409L29.9393 17.9393C30.5251 17.3536 31.4749 17.3536 32.0607 17.9393Z" fill="#08A747" />
                                     </svg>
                                 </div>
-                                <div style={{ color: '#08A747', fontsize: '20px', fontfamily: 'Roboto', fontWeight: '600', textTransform: 'capitalize', lineHeight: '32px', wordWrap: 'break-word' }}>Booking Confirmed</div>
+                                <div style={{ color: '#08A747', fontsize: '20px', fontfamily: 'Roboto', fontWeight: '600', textTransform: 'capitalize', lineHeight: '32px', wordWrap: 'break-word' }}>Booking Confirmed</div> */}
+                                {booking?.status === "Complete" && <svg xmlns="http://www.w3.org/2000/svg" width={48} height={48} viewBox="0 0 48 48" fill="none">
+                                    <path opacity="0.4" d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" fill="#08A747" />
+                                    <path d="M32.0607 17.9393C32.6464 18.5251 32.6464 19.4749 32.0607 20.0607L22.0607 30.0607C21.4749 30.6464 20.5251 30.6464 19.9393 30.0607L15.9393 26.0607C15.3536 25.4749 15.3536 24.5251 15.9393 23.9393C16.5251 23.3536 17.4749 23.3536 18.0607 23.9393L21 26.8787L25.4697 22.409L29.9393 17.9393C30.5251 17.3536 31.4749 17.3536 32.0607 17.9393Z" fill="#08A747" />
+                                </svg>}
+                                {booking?.status === "Opened" && <svg width={48} height={48} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.4" d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#2684FC" />
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M23.1628 12.8372C23.1628 12.3748 23.5376 12 24 12C30.6274 12 36 17.3726 36 24C36 30.6274 30.6274 36 24 36C17.3726 36 12 30.6274 12 24C12 23.5376 12.3748 23.1628 12.8372 23.1628C13.2996 23.1628 13.6744 23.5376 13.6744 24C13.6744 29.7027 18.2973 34.3256 24 34.3256C29.7027 34.3256 34.3256 29.7027 34.3256 24C34.3256 18.2973 29.7027 13.6744 24 13.6744C23.5376 13.6744 23.1628 13.2996 23.1628 12.8372Z" fill="#2684FC" />
+                                    <path opacity="0.5" fillRule="evenodd" clipRule="evenodd" d="M20.7624 13.282C20.9289 13.7134 20.7142 14.1981 20.2829 14.3646C20.125 14.4255 19.969 14.4902 19.8149 14.5586C19.3923 14.7462 18.8976 14.5557 18.71 14.1331C18.5224 13.7105 18.7129 13.2158 19.1355 13.0282C19.3147 12.9487 19.4962 12.8734 19.6799 12.8025C20.1112 12.636 20.5959 12.8507 20.7624 13.282ZM16.9091 15.339C17.228 15.6739 17.2151 16.2038 16.8803 16.5227C16.7578 16.6393 16.6383 16.7588 16.5217 16.8812C16.2028 17.2161 15.6729 17.229 15.338 16.9101C15.0032 16.5912 14.9903 16.0613 15.3092 15.7265C15.4445 15.5843 15.5834 15.4455 15.7255 15.3101C16.0603 14.9913 16.5903 15.0042 16.9091 15.339ZM14.1321 18.711C14.5547 18.8986 14.7452 19.3933 14.5576 19.8159C14.4893 19.9699 14.4245 20.126 14.3636 20.2838C14.1971 20.7152 13.7124 20.9299 13.2811 20.7634C12.8497 20.5969 12.635 20.1122 12.8015 19.6808C12.8724 19.4972 12.9477 19.3157 13.0272 19.1365C13.2149 18.7139 13.7095 18.5234 14.1321 18.711Z" fill="#2684FC" />
+                                    <path opacity="0.5" d="M24.0003 19.8125C24.4627 19.8125 24.8375 20.1873 24.8375 20.6497V24.2776H28.4654C28.9278 24.2776 29.3026 24.6524 29.3026 25.1148C29.3026 25.5772 28.9278 25.952 28.4654 25.952H24.0003C23.5379 25.952 23.1631 25.5772 23.1631 25.1148V20.6497C23.1631 20.1873 23.5379 19.8125 24.0003 19.8125Z" fill="#2684FC" />
+                                </svg>
+
+                                }
+                                {booking?.status === "Upcoming" && <svg width={48} height={48} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.4" d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#2684FC" />
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M23.1628 12.8372C23.1628 12.3748 23.5376 12 24 12C30.6274 12 36 17.3726 36 24C36 30.6274 30.6274 36 24 36C17.3726 36 12 30.6274 12 24C12 23.5376 12.3748 23.1628 12.8372 23.1628C13.2996 23.1628 13.6744 23.5376 13.6744 24C13.6744 29.7027 18.2973 34.3256 24 34.3256C29.7027 34.3256 34.3256 29.7027 34.3256 24C34.3256 18.2973 29.7027 13.6744 24 13.6744C23.5376 13.6744 23.1628 13.2996 23.1628 12.8372Z" fill="#2684FC" />
+                                    <path opacity="0.5" fillRule="evenodd" clipRule="evenodd" d="M20.7624 13.282C20.9289 13.7134 20.7142 14.1981 20.2829 14.3646C20.125 14.4255 19.969 14.4902 19.8149 14.5586C19.3923 14.7462 18.8976 14.5557 18.71 14.1331C18.5224 13.7105 18.7129 13.2158 19.1355 13.0282C19.3147 12.9487 19.4962 12.8734 19.6799 12.8025C20.1112 12.636 20.5959 12.8507 20.7624 13.282ZM16.9091 15.339C17.228 15.6739 17.2151 16.2038 16.8803 16.5227C16.7578 16.6393 16.6383 16.7588 16.5217 16.8812C16.2028 17.2161 15.6729 17.229 15.338 16.9101C15.0032 16.5912 14.9903 16.0613 15.3092 15.7265C15.4445 15.5843 15.5834 15.4455 15.7255 15.3101C16.0603 14.9913 16.5903 15.0042 16.9091 15.339ZM14.1321 18.711C14.5547 18.8986 14.7452 19.3933 14.5576 19.8159C14.4893 19.9699 14.4245 20.126 14.3636 20.2838C14.1971 20.7152 13.7124 20.9299 13.2811 20.7634C12.8497 20.5969 12.635 20.1122 12.8015 19.6808C12.8724 19.4972 12.9477 19.3157 13.0272 19.1365C13.2149 18.7139 13.7095 18.5234 14.1321 18.711Z" fill="#2684FC" />
+                                    <path opacity="0.5" d="M24.0003 19.8125C24.4627 19.8125 24.8375 20.1873 24.8375 20.6497V24.2776H28.4654C28.9278 24.2776 29.3026 24.6524 29.3026 25.1148C29.3026 25.5772 28.9278 25.952 28.4654 25.952H24.0003C23.5379 25.952 23.1631 25.5772 23.1631 25.1148V20.6497C23.1631 20.1873 23.5379 19.8125 24.0003 19.8125Z" fill="#2684FC" />
+                                </svg>
+
+                                }
+                                {booking?.status === "Cancelled" &&
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.4" d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" fill="#DE4E21" />
+                                        <path d="M17.9393 17.9393C18.5251 17.3536 19.4749 17.3536 20.0607 17.9393L24 21.8787L27.9393 17.9394C28.5251 17.3536 29.4749 17.3536 30.0607 17.9394C30.6464 18.5252 30.6464 19.4749 30.0607 20.0607L26.1213 24L30.0606 27.9393C30.6464 28.5251 30.6464 29.4748 30.0606 30.0606C29.4748 30.6464 28.5251 30.6464 27.9393 30.0606L24 26.1213L20.0607 30.0607C19.4749 30.6464 18.5252 30.6464 17.9394 30.0607C17.3536 29.4749 17.3536 28.5251 17.9394 27.9393L21.8787 24L17.9393 20.0607C17.3536 19.4749 17.3536 18.5251 17.9393 17.9393Z" fill="#DE4E21" />
+                                    </svg>
+                                }
+                                {booking?.status === "Completed" &&
+                                    <svg width={49} height={48} viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.4" d="M44.5 24C44.5 35.0457 35.5457 44 24.5 44C13.4543 44 4.5 35.0457 4.5 24C4.5 12.9543 13.4543 4 24.5 4C35.5457 4 44.5 12.9543 44.5 24Z" fill="#08A747" />
+                                        <path d="M32.5607 17.9393C33.1464 18.5251 33.1464 19.4749 32.5607 20.0607L22.5607 30.0607C21.9749 30.6464 21.0251 30.6464 20.4393 30.0607L16.4393 26.0607C15.8536 25.4749 15.8536 24.5251 16.4393 23.9393C17.0251 23.3536 17.9749 23.3536 18.5607 23.9393L21.5 26.8787L25.9697 22.409L30.4393 17.9393C31.0251 17.3536 31.9749 17.3536 32.5607 17.9393Z" fill="#08A747" />
+                                    </svg>}
+
+                                {booking?.status === "Unsuccessful" &&
+                                    <svg width={48} height={48} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path opacity="0.4" d="M44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44C35.0457 44 44 35.0457 44 24Z" fill="#DC7932" />
+                                        <path d="M24 12.5C24.8284 12.5 25.5 13.1716 25.5 14V26C25.5 26.8284 24.8284 27.5 24 27.5C23.1716 27.5 22.5 26.8284 22.5 26V14C22.5 13.1716 23.1716 12.5 24 12.5Z" fill="#DC7932" />
+                                        <path d="M24 34C25.1046 34 26 33.1046 26 32C26 30.8954 25.1046 30 24 30C22.8954 30 22 30.8954 22 32C22 33.1046 22.8954 34 24 34Z" fill="#DC7932" />
+                                    </svg>
+
+                                }
+                                <p className='booking-confirmed' style={{ color: booking.status === "Opened" || booking.status === "Upcoming" ? "#2684FC" : booking.status === "Unsuccessful" ? "#DC7932" : booking?.status === "Completed" ? "#08A747" : "#DE4E21" }}>{statusCheck()}</p>
                             </div>
                             <div style={{ alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', gap: '20px', display: 'inline-flex' }}>
                                 <div className='payment-details' onClick={() => {
@@ -312,7 +389,7 @@ const BookingView = () => {
                                             <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.cancelled_date}</span>
                                             <br></br>
                                             <span className='payment-txt'>Reason For Cancellation :</span>
-                                            <span className='payment-subtxt'  style={{ float: 'inline-end' }}>{booking?.cancellation_reason}</span>
+                                            <span className='payment-subtxt' style={{ float: 'inline-end' }}>{booking?.cancellation_reason}</span>
                                             <br></br>
                                         </div>
                                     </div>
@@ -349,6 +426,7 @@ const BookingView = () => {
                     </div>
                 </div>
             </div>
+            <CancellationModal open={open2} setOpen={setOpen2} bookingId={params.id} />
         </div>
     )
 }
