@@ -1,6 +1,7 @@
+import { json } from "react-router-dom";
 import axiosInstance from "./authHandle";
 const subcategoryidURl = "main/subcategory-list"
-const companylisting="company/company-cms-list"
+const companylisting = "company/company-cms-list"
 
 export const getsServicesavailableFilterList = (data) => {
   return axiosInstance
@@ -28,45 +29,57 @@ export const createAvailablityTime = (id) => {
     .put(`service/service_availablitytime_update/${id}`)
     .then((response) => response.data)
     .catch((error) => {
-      console.error("Error while fetching lead request:", error);
+      console.error("Error while fetching request:", error);
       throw error;
     });
 };
 
-export const createAvailablity = async (data) => {
-  console.log('data:', data);
 
+// export const createAvailablity = (data) => {
+//   return axiosInstance
+//     .patch( `service/update-availability/${data.service}/${data.date}/`, {
+//       data,
+//       params:{
+//         update_type: 'time'  
+//       }
+//     })
+//     .then((response) => response.data)
+//     .catch((error) => {
+//       console.error("Error while fetching request:", error);
+//       throw error;
+//     });
+// };
+
+
+export const createAvailablity = async (data) => {
   try {
     if (data) {
-      // Use JSON.stringify to convert the payload to JSON format
+      const timeAsString = data.time.toString();
       const jsonData = JSON.stringify({
-        service: data.service,
-        // date: data.date,
-        // time: 5,
-        // update_type: 'time',
-      });
-
+        time: timeAsString,
+        // service: data.service,
+        // update_type:'time'
+        //   // date: data.date,
+        // time: data.time
+      })
       const response = await axiosInstance.patch(
-        `service/update-availability/${data.service}/${data.date}/`,
+        `service/update-availability/${data.service}/${data.date}/${data.update_type}/`,
         jsonData,
-
         {
-          headers: {
-            'Content-Type': 'application/json', // Use 'application/json' for JSON payloads
-          }, params: {
-            date: data.date,
-            time: data.time,
-            update_type: 'time',
+          headers: { "Content-Type": "application/json", Accept: "*/*" }
+          , params: {
+
+            // update_type:'time',
+            // time: data.time,
           }
         }
       );
 
-      // Return the response data
       return response.data;
     }
   } catch (error) {
     console.error("Error while updating availability:", error);
-    throw error; // Re-throw the error for handling in the calling code
+    throw error;
   }
 };
 
@@ -119,7 +132,7 @@ export const getServiceReviewFilter2 = (id, rating) => {
 
 export const getCompanyListing = () => {
   return axiosInstance
-    .get(companylisting,{params:{is_onboard:true}})
+    .get(companylisting, { params: { is_onboard: true } })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error while fetching lead request:", error);

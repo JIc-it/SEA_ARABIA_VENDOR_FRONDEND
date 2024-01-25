@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import HeaderOffCanvas from "./HeaderOffCanvas";
 import { getNotificationList } from "../../axioshandle/Notification";
 import { toast } from "react-toastify";
+import { getProfileData } from "../../axioshandle/login";
+
+
 function Header() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -13,6 +16,8 @@ function Header() {
     previous: null,
   });
   const [data, setdata] = useState([]);
+  const [customerDetails, setCustomerDetails] = useState([]);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -29,6 +34,22 @@ function Header() {
       .catch((error) => {
         setIsLoading(false);
         toast.error(error.response.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getProfileData()
+      .then((data) => {
+        console.log("prof--", data);
+        setIsLoading(false);
+        if (data) {
+          setCustomerDetails(data);
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error("Error fetching customer data:", error);
       });
   }, []);
   return (
@@ -181,8 +202,10 @@ function Header() {
                 }}
               ></span>
               <div className="d-none d-xl-block ps-2">
-                <div>Lookscout</div>
-                <div className="mt-1 small text-secondary">UI Designer</div>
+                {/* <div>Lookscout</div> */}
+                {customerDetails?.first_name}&nbsp;
+                {customerDetails?.last_name}
+                <div className="mt-1 small text-secondary">{customerDetails?.role}</div>
               </div>
             </button>
             <div className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
-  
+
   getCategoryist,
   getSubCategoryist,
   subcategoryIdFilter,
@@ -202,11 +202,12 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
       try {
         const [year, month, day] = selectedDate.split('-');
         const reversedDate = `${day}-${month}-${year}`;
+
         const data = {
           service: machineId,
           date: reversedDate,
           time: selectedSlots,
-          update_type: 'time'
+          update_type: "time"
         };
 
         console.log('submit', data);
@@ -215,7 +216,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
 
         if (adminData) {
           toast.success("Mark as Available Added Successfully.");
-          setIsRefetch(!isRefetch);
+          // setIsRefetch(!isRefetch);
 
           // close();
         } else {
@@ -253,6 +254,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           <option value="" id={"0"}>Category</option>
                           {categorylist &&
                             categorylist.map((ele, i) => {
+
                               return <option id={ele.id}>{ele.name}</option>;
                             })}
                         </select>
@@ -267,10 +269,17 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           value={selectedValue}
                           onChange={handleSubCategoryChange}
                         >
-                          <option value="" id={"0"}>Sub Category</option>
+                          {/* <option value="" id={"0"}>Sub Category</option>
                           {subcategorylist &&
                             subcategorylist.map((item, i) => {
+                        
                               return <option id={item.id}>{item.name}</option>;
+                            })} */}
+                          <option value="" id={"0"}>Sub Category</option>
+                          {subcategorylist &&
+                            subcategorylist.map((ele, i) => {
+
+                              return <option id={ele.id}>{ele.name}</option>;
                             })}
                         </select>
                       </div>
@@ -308,7 +317,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                       onChange={(e) => setSelectedDate(e.target.value)}
                     />
                     <br></br>
-                    <h4>Time Slot</h4>
+                    <h4>Time Slot testing</h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                       {timeSlots?.map((slot, index) => (
                         <div
@@ -328,16 +337,14 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           onClick={() => handleSlotClick(slot?.time)}
                         >
                           <span>{slot?.time}</span>
-                          {/* <Typography variant="body2">
-                            {slot?.time}
-                          </Typography> */}
                         </div>
                       ))}
                     </div>
                     <button
                       className="btn btn-success"
                       type="submit"
-                      onClick={formik.handleSubmit}  // <-- Corrected line
+                      onClick={formik.handleSubmit}
+                      disabled={selectedCards.some(card => card.make_slot_available)}
                       style={{
                         flex: 1,
                         backgroundColor: "#006875",
