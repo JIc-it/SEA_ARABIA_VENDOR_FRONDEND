@@ -33,7 +33,7 @@ const cards = [
 const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, close }) => {
   const [categorylist, setCategorylist] = useState([])
   const [subcategorylist, setSubCategorylist] = useState([])
-  const [selectedValue, setSelectedValue] = useState("New Lead");
+  const [selectedValue, setSelectedValue] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [servicefilterlist, setserviceFilterList] = useState([])
   const [optionmachine, setoptionmachine] = useState([])
@@ -269,12 +269,6 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           value={selectedValue}
                           onChange={handleSubCategoryChange}
                         >
-                          {/* <option value="" id={"0"}>Sub Category</option>
-                          {subcategorylist &&
-                            subcategorylist.map((item, i) => {
-                        
-                              return <option id={item.id}>{item.name}</option>;
-                            })} */}
                           <option value="" id={"0"}>Sub Category</option>
                           {subcategorylist &&
                             subcategorylist.map((ele, i) => {
@@ -291,7 +285,6 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                       value={selectedOptions}
                       onChange={onChangeMachine}
                       getOptionLabel={(option) => (
-
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <img src={option.service_image[0]?.image} alt={option.name} style={{ width: '40px', marginRight: '8px' }} />
                           <div>
@@ -307,17 +300,20 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                       )}
                       getOptionValue={(option) => option.value}
                     />
-                    <label className="form-label">Calendar :</label>
-                    <input
-                      type="date"
-
-                      className="form-control"
-                      placeholder="Date"
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                    />
-                    <br></br>
-                    <h4>Time Slot testing</h4>
+                    <div className='row'>
+                      <div className='col-lg-12'>
+                        <label className="form-label">Calendar :</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          placeholder="Date"
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          style={{ width: "103%" }}
+                        />
+                      </div>
+                    </div>
+                    <h4 style={{ position: 'relative', top: 10 }}>Time Slot</h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                       {timeSlots?.map((slot, index) => (
                         <div
@@ -325,7 +321,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           style={{
                             width: '120px',
                             margin: '8px',
-                            cursor: 'pointer',
+                            cursor: slot.make_slot_available ? 'not-allowed' : 'pointer',
                             backgroundColor: selectedSlots.includes(slot?.time) ? '#0A77FF' : 'white',
                             borderRadius: '4px',
                             border: '1px solid #ccc',
@@ -333,29 +329,46 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
+                            opacity: slot.make_slot_available ? 0.5 : 1, // Optional: reduce opacity for disabled cards
                           }}
-                          onClick={() => handleSlotClick(slot?.time)}
+                          onClick={() => {
+                            if (!slot.make_slot_available) {
+                              handleSlotClick(slot?.time);
+                            }
+                          }}
                         >
                           <span>{slot?.time}</span>
+                          {/* <input
+                            type="checkbox"
+                            checked={selectedCards.some(card => card.time === slot?.time)}
+                            onChange={() => toggleCardSelection(slot?.time)}
+                            disabled={slot.make_slot_available}
+                          /> */}
                         </div>
                       ))}
                     </div>
-                    <button
-                      className="btn btn-success"
-                      type="submit"
-                      onClick={formik.handleSubmit}
-                      disabled={selectedCards.some(card => card.make_slot_available)}
-                      style={{
-                        flex: 1,
-                        backgroundColor: "#006875",
-                        width: "92%",
-                        position: "absolute",
-                        bottom: "1rem",
-                      }}
-                    >
-                      {isLoading ? <CircularProgress /> : "Mark As Available"}
-                    </button>
-                    {selectedSlots.length > 0 && (
+                    <br /><br />
+                    <div className='row'>
+                      <div className='col-lg-12'>
+                        <button
+                          className="btn btn-success"
+                          type="submit"
+                          onClick={formik.handleSubmit}
+                          // disabled={selectedCards.some(card => card.make_slot_available)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: "#006875",
+                            width: "93%",
+                            position: "absolute",
+                            bottom: "1rem",
+                            color: "#fff"
+                          }}
+                        >
+                          {isLoading ? <CircularProgress /> : "Mark As Available"}
+                        </button>
+                      </div>
+                    </div>
+                    {/* {selectedSlots.length > 0 && (
                       <div>
                         <p>You have selected the following time slots:</p>
                         <ul>
@@ -364,7 +377,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                           ))}
                         </ul>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </form>
               </div>

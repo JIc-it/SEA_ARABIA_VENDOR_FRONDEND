@@ -113,7 +113,7 @@ const Calendar = () => {
                                     />
                                 </div>
                             </div>
-                       
+
                             <div className='col-lg-12'>
                                 <label className="form-label">Category :</label>
                                 <div className="status_dropdown">
@@ -175,23 +175,55 @@ const Calendar = () => {
                                 <div className="card mb-3">
                                     <div className="card-body p-3">
                                         <span className='head-text'>{filterdataidData?.service?.name},</span> &nbsp;<span className='card-id'>{filterdataidData?.service?.service_id}</span><br />
-                                        <span className='head-text'>
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
-                                            </svg>&nbsp;
-                                        </span><br />
-                                        {
-                                            filterdataidData?.time?.map((time, index) => {
-                                                if (time?.make_slot_available === true) {
-                                                    return (
-                                                        <div style={{ display: 'flex' }}>
-                                                            <span className="card-text">{time?.time}</span><br />
-                                                        </div>
-                                                    )
-                                                }
-                                            })
-                                        }
+                                        <div style={{ display: 'flex' }}>
+                                            <span className='head-text'>
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
+                                                </svg>&nbsp;
+                                            </span><br />
+                                            <span>Time: </span>&nbsp;&nbsp;
+                                            {
+                                                filterdataidData?.time?.map((time, index) => {
+                                                    if (time?.make_slot_available === true) {
+                                                        return (
+                                                            <div style={{ marginRight: '8px' }}>
+                                                                <span className="card-text">{time?.time}</span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='col-lg-12'>
+                                <div className="card mb-3">
+                                    <div className="card-body p-3">
+                                        <span className='head-text'>{filterdataidData?.service?.name},</span> &nbsp;<span className='card-id'>Available</span><br />
+                                        <div style={{ display: 'flex' }}>
+                                            <span className='head-text'>
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M18.3333 10.0001C18.3333 14.6025 14.6023 18.3334 9.99996 18.3334C5.39759 18.3334 1.66663 14.6025 1.66663 10.0001C1.66663 5.39771 5.39759 1.66675 9.99996 1.66675C14.6023 1.66675 18.3333 5.39771 18.3333 10.0001Z" fill="#006875" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.04175C10.3452 6.04175 10.625 6.32157 10.625 6.66675V9.7412L12.5253 11.6415C12.7694 11.8856 12.7694 12.2813 12.5253 12.5254C12.2812 12.7694 11.8855 12.7694 11.6414 12.5254L9.55806 10.442C9.44085 10.3248 9.375 10.1658 9.375 10.0001V6.66675C9.375 6.32157 9.65482 6.04175 10 6.04175Z" fill="white" />
+                                                </svg>&nbsp;
+                                            </span><br />
+                                            <span>Time: </span>&nbsp;&nbsp;
+                                            {
+                                                filterdataidData?.time?.map((time, index) => {
+                                                    if (time?.make_slot_available === false) {
+                                                        return (
+                                                            <div style={{ marginRight: '8px' }}>
+                                                                <span className="card-text">{time?.time}</span>
+                                                                {index < filterdataidData?.time?.length - 1 && <span>-</span>}
+                                                            </div>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
