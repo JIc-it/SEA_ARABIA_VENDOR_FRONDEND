@@ -278,7 +278,20 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                         </select>
                       </div>
                     </div>
-                    <h2>Select Machine</h2>
+                    <div className='row'>
+                      <div className='col-lg-12'>
+                        <label className="form-label">Calendar :</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          placeholder="Date"
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          style={{ width: "103%" }}
+                        />
+                      </div>
+                    </div>
+                    <h2 style={{marginTop: 10}}>Select Machine</h2>
                     <Select
                       // isMulti
                       options={optionmachine}
@@ -300,19 +313,7 @@ const Availability = ({ selectedOptions, onChange, setIsRefetch, isRefetch, clos
                       )}
                       getOptionValue={(option) => option.value}
                     />
-                    <div className='row'>
-                      <div className='col-lg-12'>
-                        <label className="form-label">Calendar :</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          placeholder="Date"
-                          value={selectedDate}
-                          onChange={(e) => setSelectedDate(e.target.value)}
-                          style={{ width: "103%" }}
-                        />
-                      </div>
-                    </div>
+
                     <h4 style={{ position: 'relative', top: 10 }}>Time Slot</h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                       {timeSlots?.map((slot, index) => (
